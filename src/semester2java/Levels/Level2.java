@@ -20,13 +20,13 @@ import semester2java.Bodies.SpikedBarrel;
  *
  * @author Christopher
  */
-public class Level1 extends Level implements Serializable {
+public class Level2 extends Level implements Serializable {
 
     private final Vec2 start;
     private static final BodyImage W3
             = new BodyImage(getTextureLocation(Textures.WOOD_03), 15);
 
-    public Level1() {
+    public Level2() {
         super();
         start = new Vec2(0, -11.5f);
         initializeLevel();
@@ -96,7 +96,6 @@ public class Level1 extends Level implements Serializable {
         Shape pf9Shape = new BoxShape(5.5f, 0.5f);
         setBody(true, "platform9", pf9Shape, start, 0);
         new Worm((World)this).putOn(getBody("platform9"));
-        getBody("platform9").setName("end");
         
         changeFriction(getFrictionCoefficient(FrictionCoefficient.WOOD));
         getBodies().forEach((k, v) -> {

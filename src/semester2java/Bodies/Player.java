@@ -23,6 +23,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.jbox2d.common.Vec2;
 import semester2java.Levels.Event.EndGame;
+import semester2java.Levels.Levels;
 
 /**
  *
@@ -48,9 +49,11 @@ public class Player extends Walker implements CollisionListener {
     private Projectile playerProjectile;
     private final EndGame endGame = new EndGame();
     private JPanel healthPanel, projectilePanel;
+    private final Levels levels;
 
-    public Player(World world) {
+    public Player(World world,Levels levels) {
         super(world);
+        this.levels=levels;
         drawPlayer();
         hearts = 3;
         defaultHealth = "";
@@ -324,14 +327,23 @@ public class Player extends Walker implements CollisionListener {
             decrementHalfHeart();
 
         } else if (e.getOtherBody().getName() != null) {
-            if (e.getOtherBody().getName().equals("standardEnemy")) {
-                decrementHalfHeart();
-                e.getOtherBody().destroy();
-            } else if (e.getOtherBody().getName().equals("1health")) {
-                e.getOtherBody().destroy();
-                for (int i = 0; i < 2; i++) {
-                    this.incrementHalfHeart();
-                }
+            switch (e.getOtherBody().getName()) {
+                case "standardEnemy":
+                    decrementHalfHeart();
+                    e.getOtherBody().destroy();
+                    break;
+                case "1health":
+                    e.getOtherBody().destroy();
+                    for (int i = 0; i < 2; i++) {
+                        this.incrementHalfHeart();
+                    }   break;
+                case "end":
+                    e.getOtherBody().destroy();
+                    levels.getLevel().fireChangeLevelEvent();
+                    break;
+                default:
+                    //fix me?
+                    break;
             }
 
         }

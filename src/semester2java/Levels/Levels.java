@@ -72,7 +72,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         this.resolutionX=resolutionX;
         this.resolutionY=resolutionY;
         view = new UserView(new World(), resolutionY, resolutionY);
-        player = new Player(new World());
+        player = new Player(new World(),this);
         level = new Level();
         mh=new MouseHandler(view, level, player);
         
@@ -90,7 +90,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
 
             case LEVEL2:
                 level.stop();
-                nextLevel(new Level());
+                nextLevel(new Level2());
                 break;
 
             case LEVEL3:
@@ -120,7 +120,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
     }
 
     private void initializePlayer() {
-        player = new Player(level);
+        player = new Player(level,this);
         player.putOn(level.getBody("start"));
         player.setAngle(0);
     }
