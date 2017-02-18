@@ -138,9 +138,14 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
     }
 
     private void initializePlayer(Level level) {
+        player.cleanup();
         player = new Player(level, this);
         player.putOn(level.getBody("start"));
         player.setAngle(0);
+        player.getHealthPanel().setBounds(20, 5, resolutionX - 20, 50);
+        player.getProjectilePanel().setBounds(20, player.getHealthPanel().getHeight() + 5, resolutionX - 20, 50);
+        layeredPane.add(player.getHealthPanel(),0);
+        layeredPane.add(player.getProjectilePanel(),0);
     }
 
     private void initializeView() {
