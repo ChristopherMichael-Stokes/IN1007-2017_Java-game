@@ -44,58 +44,6 @@ public class Level2 extends Level implements Serializable {
         start.y -= 5f;
         Shape shape = new BoxShape(3, 0.5f);
         setBody(true, "start", shape, start, 0);
-
-        start.x += 2;
-        start.y += 0.5f;
-        Shape pf1Shape = new BoxShape((float) Math.sqrt(2), 0.5f, new Vec2((float) Math.sqrt(2), -0.5f));
-        setBody(true, "platform1", pf1Shape, start, pi / 4);
-
-        start.x += 5;
-        start.y += 1.5f;
-        Shape pf2Shape = new BoxShape(3, 0.5f);
-        setBody(true, "platform2", shape, start, 0);
-
-        start.x += 3.5f;
-        Shape pf3Shape = new BoxShape((float) Math.sqrt(2) / 2, 0.5f, new Vec2((float) Math.sqrt(2) / 2, 0.25f));
-        setBody(true, "platform3", pf3Shape, start, pi / 4);
-
-        start.x += 3.5f;
-        start.y += 1;
-        setBody(true, "platform4", pf2Shape, start, 0);
-
-        start.x += 3;
-        start.y -= 0.1f;
-        Shape pf5Shape = new BoxShape((float) Math.sqrt(15.25f) / 2, 0.5f, new Vec2((float) Math.sqrt(15.25f) / 2, 0.25f));
-        setBody(true, "platform5", pf5Shape, start, pi/5);
-
-        start.x += 3.5f;
-        start.y += 2.4f;
-        Shape pf6Shape = new BoxShape(0.75f, 3, new Vec2(0, -2.5f));
-        setBody(true, "platform6", pf6Shape, start, 0);
-
-        start.x += 6.5f;
-        start.y += 2.75f;
-        setBody(true, "platform7", pf6Shape, start, 0);
-
-        start.x += 0.5f;
-        start.y -= 0.25f;
-        Shape pf8Shape = new BoxShape((float) Math.sqrt(85) / 2, 0.5f, new Vec2((float) Math.sqrt(85) / 2, 0.5f));
-        setBody(true, "platform8", pf8Shape, start, pi/5);
-        
-        start.y +=2;
-        Shape plankShape = new BoxShape (0.5f,1.5f);
-        setBody(true, "plank1", plankShape, start, pi/5);
-        getBody("plank1").setName("destructable");
-        
-        for (int i = 0; i < 3; i++) {
-            new SpikedBarrel((World)this).setPosition(new Vec2(start.x+i+2, start.y+i+5));
-        }
-
-        start.x += 12.5f;
-        start.y += 3.5f;
-        Shape pf9Shape = new BoxShape(5.5f, 0.5f);
-        setBody(true, "platform9", pf9Shape, start, 0);
-        new Worm((World)this).putOn(getBody("platform9"));
         
         changeFriction(getFrictionCoefficient(FrictionCoefficient.WOOD));
         getBodies().forEach((k, v) -> {

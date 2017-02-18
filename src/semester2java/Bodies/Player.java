@@ -50,6 +50,7 @@ public class Player extends Walker implements CollisionListener {
     private final EndGame endGame = new EndGame();
     private JPanel healthPanel, projectilePanel;
     private final Levels levels;
+    private SolidFixture prevCollision;
 
     public Player(World world,Levels levels) {
         super(world);
@@ -107,6 +108,11 @@ public class Player extends Walker implements CollisionListener {
         addImage(image);
         this.setName("player");
         this.addCollisionListener(this);
+    }
+    
+    public void cleanup(){
+        levels.getLayeredPane().remove(healthPanel);
+        levels.getLayeredPane().remove(projectilePanel);
     }
 
     // assigners/mutators
@@ -230,7 +236,6 @@ public class Player extends Walker implements CollisionListener {
 
     public void drawPlayerShots() {
         projectilePanel.removeAll();
-
         for (int i = 0; i < shots; i++) {
             projectilePanel.add(new JLabel(projectileIcon));
         }
@@ -295,9 +300,7 @@ public class Player extends Walker implements CollisionListener {
     public Projectile getPlayerProjectile() {
         return playerProjectile;
     }
-
-    SolidFixture prevCollision;
-
+    
     //players collision listener
     @Override
     public void collide(CollisionEvent e) {

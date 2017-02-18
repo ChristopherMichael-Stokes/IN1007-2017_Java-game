@@ -23,8 +23,6 @@ import javax.swing.JPanel;
 import semester2java.Controller.KeyboardHandler;
 import semester2java.Levels.Levels;
 
-
-
 /**
  *
  * @author chris
@@ -34,32 +32,32 @@ public class Semester2Java extends SimulationSettings {
     public JLayeredPane layeredPane;
     private World world;
     private JPanel health, projectilePanel;
+    private final KeyboardHandler kh;
     private final UserView view;
     private final Levels levels;
+    private final JFrame frame;
     private static final File FOREST_01 = new File("data/forestBackground01.jpg");
     private static final File FOREST_02 = new File("data/forestBackground02.jpg");
     private static final File FOREST_03 = new File("data/forestBackground03.jpg");
 
     public Semester2Java(int resolutionX, int resolutionY, int fps) {
         super(fps);
-        layeredPane = new JLayeredPane();
-
-        levels = new Levels(layeredPane,resolutionX,resolutionY);
-        this.world = levels.getLevel();
 
         // display the view in a frame
-        final JFrame frame = new JFrame("semester2game");
+        frame = new JFrame("semester2game");
         frame.setFocusable(true);
 
         // quit the application when the game window is closed
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationByPlatform(true);
-        // display the world in the window
 
+        layeredPane = new JLayeredPane();
         layeredPane.setOpaque(false);
         layeredPane.setPreferredSize(new Dimension(resolutionX, resolutionY));
 
-        // make a view
+        levels = new Levels(layeredPane, resolutionX, resolutionY, this);
+        this.world = levels.getLevel();
+
         view = levels.getView();
         levels.setView(view);
         view.setCentre(levels.getPlayer().getPosition());
@@ -67,7 +65,6 @@ public class Semester2Java extends SimulationSettings {
 //        view.setGridResolution(1);
 
         health = levels.getPlayer().getHealthPanel();
-        health.setLayout(new BoxLayout(health, BoxLayout.LINE_AXIS));
         levels.getPlayer().drawPlayerHealth();
 
         layeredPane.add(health, 0);
@@ -80,8 +77,6 @@ public class Semester2Java extends SimulationSettings {
         projectilePanel.setBounds(20, health.getHeight() + 5, resolutionX - 20, 50);
 
         layeredPane.add(view, -1);
-        view.setBounds(0, 0, resolutionX, resolutionY);
-        view.setOpaque(false);
 
         JLabel background = new JLabel();
         try {
@@ -89,7 +84,7 @@ public class Semester2Java extends SimulationSettings {
             background = new JLabel(new ImageIcon(myPicture));
         } catch (IOException e) {
             //if the image is missing paint the background blue
-            System.out.println("Background image missing\n"+e);
+            System.out.println("Background image missing\n" + e);
             background.setOpaque(true);
             background.setBackground(Color.CYAN);
         } finally {
@@ -97,7 +92,7 @@ public class Semester2Java extends SimulationSettings {
             background.setBounds(0, 0, resolutionX, resolutionY);
         }
 
-        KeyboardHandler kh = new KeyboardHandler(world, levels.getPlayer(), layeredPane);
+        kh = levels.getKeyboardHandler();
         frame.addKeyListener(kh);
         frame.add(layeredPane);
         // don't let the game window be resized
@@ -106,10 +101,15 @@ public class Semester2Java extends SimulationSettings {
         frame.pack();
         // make the window visible
         frame.setVisible(true);
+
 //        kh.initialize();
         // uncomment this to make a debugging view
 //        JFrame debugView = new DebugViewer(world, resolutionX, resolutionY);
         // start!
+    }
+
+    public JFrame getFrame() {
+        return frame;
     }
 
     public static void main(String[] args) throws InterruptedException {

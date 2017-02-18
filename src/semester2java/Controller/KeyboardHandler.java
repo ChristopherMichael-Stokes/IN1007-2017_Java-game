@@ -43,8 +43,8 @@ public class KeyboardHandler implements KeyListener, ActionListener {
     private JLabel confirmationLbl, pauseText;
     private JPanel pauseBackground, confirmation;
     private JButton rebindKey, play;
-    private final World world;
-    private final Player player;
+    private World world;
+    private Player player;
     private final JLayeredPane layeredPane;
     //player bound keys
     private Map<String, Integer> keyBinds;
@@ -85,7 +85,88 @@ public class KeyboardHandler implements KeyListener, ActionListener {
     public void initialize() {
         new Thread(r1).start();
     }
+    
+    public void setPlayer(Player player){
+        this.player=player;
+    }
+    public void setWorld(World world){
+        this.world=world;
+    }
+    
 
+    private void rk() {
+        layeredPane.moveToBack(pauseBackground);
+        pauseBackground.remove(rebindKey);
+        gBC.gridy = 2;
+        gBC.gridwidth = 2;
+        pauseBackground.add(new JLabel(" "), gBC);
+        gBC.gridwidth = 1;
+        int i = 2;
+        for (Map.Entry<String, Integer> entry : keyBinds.entrySet()) {
+            gBC.fill = GridBagConstraints.BOTH;
+            gBC.gridx = 0;
+            gBC.gridy = i + 1;
+            pauseBackground.add(new JButton(entry.getKey()), gBC);
+            gBC.gridx = 1;
+            JFormattedTextField textField = new JFormattedTextField();
+            String keyValue;
+            int value = entry.getValue();
+            if (Character.isAlphabetic(entry.getValue())) {
+                keyValue = Character.toString((char) value);
+            } else {
+                keyValue = Character.getName(entry.getValue());
+            }
+
+            textField.setValue(keyValue);
+            textField.setColumns(5);
+            gBC.fill = GridBagConstraints.VERTICAL;
+            pauseBackground.add(textField, gBC);
+            i++;
+        }
+        pauseBackground.revalidate();
+        pauseBackground.repaint();
+        layeredPane.moveToFront(pauseBackground);
+    }
+
+    private void buildPauseBackground() {
+        pauseBackground.removeAll();
+        pauseBackground.setOpaque(true);
+        pauseBackground.setBackground(new Color(135, 135, 135, 225));
+        pauseBackground.setBounds(0, 0, 1024, 768);
+
+        pauseText = new JLabel("The game is currently paused");
+        pauseText.setFont(new Font(pauseText.getFont().getName(), Font.PLAIN, 20));
+        gBC.gridx = 0;
+        gBC.gridy = 0;
+        gBC.gridwidth = 2;
+        pauseBackground.add(pauseText, gBC);
+
+        play = new JButton("Click to resume game");
+        play.addActionListener(this);
+        gBC.gridx = 0;
+        gBC.gridy = 1;
+        pauseBackground.add(play, gBC);
+
+        rebindKey = new JButton("Reconfigure Controls");
+        rebindKey.addActionListener(this);
+        gBC.gridx = 1;
+        gBC.gridy = 2;
+        gBC.gridwidth = 1;
+        pauseBackground.add(rebindKey, gBC);
+    }
+
+    private void pause() {
+        layeredPane.moveToFront(pauseBackground);
+        world.stop();
+    }
+
+    private void unPause() {
+        world.start();
+        //used to build set the background back to its initial state
+        buildPauseBackground();
+        layeredPane.moveToBack(pauseBackground);
+    }
+    
     @Override
     public void keyPressed(KeyEvent e) {
 
@@ -195,78 +276,5 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         }
 
     }
-
-    private void rk() {
-        layeredPane.moveToBack(pauseBackground);
-        pauseBackground.remove(rebindKey);
-        gBC.gridy = 2;
-        gBC.gridwidth = 2;
-        pauseBackground.add(new JLabel(" "), gBC);
-        gBC.gridwidth = 1;
-        int i = 2;
-        for (Map.Entry<String, Integer> entry : keyBinds.entrySet()) {
-            gBC.fill = GridBagConstraints.BOTH;
-            gBC.gridx = 0;
-            gBC.gridy = i + 1;
-            pauseBackground.add(new JButton(entry.getKey()), gBC);
-            gBC.gridx = 1;
-            JFormattedTextField textField = new JFormattedTextField();
-            String keyValue;
-            int value = entry.getValue();
-            if (Character.isAlphabetic(entry.getValue())) {
-                keyValue = Character.toString((char) value);
-            } else {
-                keyValue = Character.getName(entry.getValue());
-            }
-
-            textField.setValue(keyValue);
-            textField.setColumns(5);
-            gBC.fill = GridBagConstraints.VERTICAL;
-            pauseBackground.add(textField, gBC);
-            i++;
-        }
-        pauseBackground.revalidate();
-        pauseBackground.repaint();
-        layeredPane.moveToFront(pauseBackground);
-    }
-
-    private void buildPauseBackground() {
-        pauseBackground.removeAll();
-        pauseBackground.setOpaque(true);
-        pauseBackground.setBackground(new Color(135, 135, 135, 225));
-        pauseBackground.setBounds(0, 0, 1024, 768);
-
-        pauseText = new JLabel("The game is currently paused");
-        pauseText.setFont(new Font(pauseText.getFont().getName(), Font.PLAIN, 20));
-        gBC.gridx = 0;
-        gBC.gridy = 0;
-        gBC.gridwidth = 2;
-        pauseBackground.add(pauseText, gBC);
-
-        play = new JButton("Click to resume game");
-        play.addActionListener(this);
-        gBC.gridx = 0;
-        gBC.gridy = 1;
-        pauseBackground.add(play, gBC);
-
-        rebindKey = new JButton("Reconfigure Controls");
-        rebindKey.addActionListener(this);
-        gBC.gridx = 1;
-        gBC.gridy = 2;
-        gBC.gridwidth = 1;
-        pauseBackground.add(rebindKey, gBC);
-    }
-
-    private void pause() {
-        layeredPane.moveToFront(pauseBackground);
-        world.stop();
-    }
-
-    private void unPause() {
-        world.start();
-        //used to build set the background back to its initial state
-        buildPauseBackground();
-        layeredPane.moveToBack(pauseBackground);
-    }
-
+    
 }
