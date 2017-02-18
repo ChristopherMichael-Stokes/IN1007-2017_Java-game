@@ -3,7 +3,7 @@
  * bodies unique to the level are set here.
  *
  */
-package semester2java.Levels;
+package semester2java.Levels.levels;
 
 import city.cs.engine.BodyImage;
 import city.cs.engine.BoxShape;
@@ -13,6 +13,7 @@ import java.io.Serializable;
 import org.jbox2d.common.Vec2;
 import semester2java.Bodies.AIBodies.Worm;
 import semester2java.Bodies.SpikedBarrel;
+import semester2java.Levels.Level;
 
 
 

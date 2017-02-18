@@ -6,6 +6,8 @@
  */
 package semester2java.Levels;
 
+import semester2java.Levels.levels.Level2;
+import semester2java.Levels.levels.Level1;
 import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import city.cs.engine.UserView;
