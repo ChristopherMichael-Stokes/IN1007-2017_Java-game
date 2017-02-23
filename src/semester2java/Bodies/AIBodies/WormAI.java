@@ -18,13 +18,17 @@ import semester2java.Levels.Level;
  */
 public class WormAI implements StepListener{
     
-    private static Player PLAYER;
-    private static Level LEVEL;
+    private Player player;
+    private Level level;
+    private Worm worm;
     
     
-    public WormAI(Player player, Level level){
-        PLAYER=player;
-        LEVEL=level;
+    public WormAI(Player player, Level level, Worm worm){
+        this.player=player;        
+        this.level=level;
+        this.worm=worm;
+        
+                
         
         
         
