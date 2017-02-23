@@ -37,7 +37,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         LEVEL1(1), LEVEL2(2), LEVEL3(3);
 
         private static final Map<Integer, LevelNumber> lookup
-                = new HashMap<Integer, LevelNumber>();
+                = new HashMap<>();
 
         static {
             EnumSet.allOf(LevelNumber.class).forEach(ln -> {

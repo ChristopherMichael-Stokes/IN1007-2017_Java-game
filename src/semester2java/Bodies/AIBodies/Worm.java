@@ -65,7 +65,7 @@ public class Worm extends Walker implements CollisionListener {
         this.addCollisionListener(this);
     }
 
-    public void wormControl(Player player) {
+    public void addWormAI(Player player) {
         //used to add pathing to the worm to allow it to track the player
         this.player = player;
         this.playerPosition = player.getPosition();
