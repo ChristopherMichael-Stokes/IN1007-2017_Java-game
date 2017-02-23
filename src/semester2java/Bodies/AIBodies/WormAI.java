@@ -21,31 +21,41 @@ public class WormAI implements StepListener{
     private Player player;
     private Level level;
     private Worm worm;
-    
+    private float moveSpeed;
+    private float jumpHeight;
     
     public WormAI(Player player, Level level, Worm worm){
         this.player=player;        
         this.level=level;
         this.worm=worm;
-        
-                
-        
-        
-        
+        moveSpeed=5;
+        jumpHeight=4;
+                   
+    }            
+    
+    public void setMoveSpeed(float moveSpeed){
+        this.moveSpeed=moveSpeed;
+    }
+    public float getMoveSpeed(){
+        return moveSpeed;
+    }
+    public void setJumpHeight(float jumpHeight){
+        this.jumpHeight=jumpHeight;
+    }
+    public float getJumpHeight(){
+        return jumpHeight;
     }
     
     
-            
-    
-
+    //implementation of abstract methods
     @Override
     public void preStep(StepEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public void postStep(StepEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
     
 }
