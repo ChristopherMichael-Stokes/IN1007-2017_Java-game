@@ -84,6 +84,7 @@ public class KeyboardHandler implements KeyListener, ActionListener {
 
     public void initialize() {
         new Thread(r1).start();
+        System.out.println("nothing");
     }
     
     public void setPlayer(Player player){
@@ -106,7 +107,7 @@ public class KeyboardHandler implements KeyListener, ActionListener {
             gBC.fill = GridBagConstraints.BOTH;
             gBC.gridx = 0;
             gBC.gridy = i + 1;
-            pauseBackground.add(new JButton(entry.getKey()), gBC);
+            pauseBackground.add(new JLabel(entry.getKey()), gBC);
             gBC.gridx = 1;
             JFormattedTextField textField = new JFormattedTextField();
             String keyValue;
@@ -156,8 +157,8 @@ public class KeyboardHandler implements KeyListener, ActionListener {
     }
 
     private void pause() {
-        layeredPane.moveToFront(pauseBackground);
         world.stop();
+        layeredPane.moveToFront(pauseBackground);        
     }
 
     private void unPause() {
@@ -207,6 +208,10 @@ public class KeyboardHandler implements KeyListener, ActionListener {
                 player.setLinearVelocity(new Vec2(-player.getMoveSpeed() / 3f, player.getLinearVelocity().y));
             }
         }
+    }
+    
+    public JPanel getPauseBackground(){
+        return pauseBackground;
     }
 
     @Override

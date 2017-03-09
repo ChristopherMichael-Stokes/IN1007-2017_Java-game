@@ -34,7 +34,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
 //this class is a collection of all the levels and allows for levels to 
 //interact with each other
     private enum LevelNumber {
-        LEVEL1(1), LEVEL2(2), LEVEL3(3);
+        LEVEL1(1), LEVEL2(2), LEVEL3(3), LEVEL4(4);
 
         private static final Map<Integer, LevelNumber> lookup
                 = new HashMap<>();
@@ -110,7 +110,13 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
 
             case LEVEL3:
                 level.stop();
+                System.out.println("make level3!");
+                break;
+                
+            case LEVEL4:
+                level.stop();
                 nextLevel(new Level());
+                System.out.println("make level4!");
                 break;
 
             default:
@@ -130,9 +136,9 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         System.out.println(this.level.isRunning());
         initializePlayer(this.level);    
 //        game.getFrame().removeKeyListener(kh);
-        kh.setWorld(level);
+        kh.setWorld(player.getWorld());
         kh.setPlayer(player);
-        game.getFrame().addKeyListener(kh);
+//        game.getFrame().addKeyListener(kh);
         level.start();
 
     }
@@ -155,6 +161,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         view.setOpaque(false);
         mh = new MouseHandler(view, level, player);
         view.addMouseListener(mh);
+        kh.setPlayer(player);
     }
 
     public void incrementLevel() {
