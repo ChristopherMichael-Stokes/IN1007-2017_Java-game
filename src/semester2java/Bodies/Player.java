@@ -351,7 +351,8 @@ public class Player extends Walker implements CollisionListener {
                     break;
                 case "end":
                     e.getOtherBody().destroy();
-                    levels.getLevel().fireChangeLevelEvent();
+//                    levels.getLevel().fireChangeLevelEvent();
+                    levels.incrementLevel();
                     break;
                 default:
                     //handle this

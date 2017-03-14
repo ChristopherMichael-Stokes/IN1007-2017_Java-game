@@ -210,7 +210,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
     public void incrementLevel() {
         //TODO add logic to make sure level is less than total levels in enum
-        levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode() + 1);
+        levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode() + 1 < 4 ? levelNumber.getCode() + 1 : 1);
         changeLevel();
     }
 
