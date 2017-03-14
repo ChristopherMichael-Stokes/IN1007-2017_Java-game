@@ -28,8 +28,8 @@ import semester2java.Bodies.Player;
 import semester2java.Controller.KeyboardHandler;
 import semester2java.Controller.MouseHandler;
 import semester2java.Levels.Event.ChangeLevelListener;
-import semester2java.Levels.Event.EndGame;
 import semester2java.Levels.Event.EndGameListener;
+import semester2java.Levels.levels.Level3;
 import semester2java.Semester2Java;
 
 /**
@@ -122,8 +122,14 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
                 break;
 
             case LEVEL3:
-                level.stop();
-                System.out.println("make level3!");
+                tempLevel = new Level3();
+                nextLevel(tempLevel);
+
+                layeredPane.remove(view);
+                initializeView();
+                layeredPane.add(view, 1);
+
+                System.out.println("Im on a new level");
                 break;
 
             case LEVEL4:

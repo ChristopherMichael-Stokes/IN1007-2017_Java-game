@@ -8,21 +8,25 @@ package semester2java.Levels.levels;
 import city.cs.engine.BodyImage;
 import city.cs.engine.BoxShape;
 import city.cs.engine.Shape;
+import city.cs.engine.World;
 import java.io.Serializable;
 import org.jbox2d.common.Vec2;
+import semester2java.Bodies.SawBlade;
 import semester2java.Levels.Level;
+import static semester2java.Levels.Level.getFrictionCoefficient;
+import static semester2java.Levels.Level.getTextureLocation;
 
 /**
  *
  * @author Christopher
  */
-public final class Level2 extends Level implements Serializable {
+public final class Level3 extends Level implements Serializable {
 
     private final Vec2 start;
     private static final BodyImage W3
-            = new BodyImage(getTextureLocation(Textures.WOOD_03), 15);
+            = new BodyImage(getTextureLocation(Level.Textures.WOOD_01), 15);
 
-    public Level2() {
+    public Level3() {
         super();
         start = new Vec2(0, -11.5f);
         initializeLevel();
@@ -42,41 +46,24 @@ public final class Level2 extends Level implements Serializable {
         Shape shape = new BoxShape(3, 0.5f);
         setBody(true, "start", shape, start, 0);
         
-        start.x += 10f;
-        start.y += 1f;
-        Shape pf1 = new BoxShape(3, 0.5f);
-        setBody(true, "platform1", pf1, start, 0);
-        
         start.x += 20f;
-        Shape pf2 = new BoxShape(7,0.5f);
-        setBody(true, "platform2", pf2, start, 0);
-                
-        start.x += 11f;
-        start.y += 7f;
-        Shape pf3 = new BoxShape(7.25f,0.5f);
-        setBody(true, "platform3", pf3, start, pi/2);
+        start.y += 5f;
+        Shape pf1 = new BoxShape(8f,0.5f);
+        setBody(true, "platform1", pf1, start, pi/6);
         
-        start.x -= 11f;
-        start.y -= 1f;
-        Shape pf4 = new BoxShape(3f,0.5f);
-        setBody(true, "platform4", pf4, start, 0);
+        start.x += 13f;
+        start.y += 7.5f;
+        setBody(true, "platform2", pf1, start, pi/6);
+        new SawBlade((World)this).putOn(getBody("platform2"));
         
-        start.x += 9f;
-        start.y += 6.15f;
-        setBody(true, "platform5", pf4, start, pi/4);
+        start.x += 13f;
+        start.y += 5f;
         
-        start.x += 11f;
-        start.y += 3f;
-        Shape pf6 = new BoxShape(4f,0.5f);
-        setBody(true, "platform6", pf6, start, 0);
         
-        start.y -= 17f;
-        setBody(true, "platform7", pf6, start, 0);
-        getBody("platform7").setName("end");
         
-        setBackground(Backgrounds.FOREST_BACKGROUND_01);
+        setBackground(Level.Backgrounds.FOREST_BACKGROUND_01);
 
-        changeFriction(getFrictionCoefficient(FrictionCoefficient.WOOD));
+        changeFriction(getFrictionCoefficient(Level.FrictionCoefficient.WOOD));
         getBodies().forEach((k, v) -> {
             v.setClipped(true);
             v.addImage(W3);

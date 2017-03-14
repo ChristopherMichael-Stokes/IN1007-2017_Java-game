@@ -47,7 +47,8 @@ public abstract class Level extends World {
     }
 
     public enum Backgrounds {
-        FOREST_BACKGROUND_01, FOREST_BACKGROUND_02, FOREST_BACKGROUND_03;
+        FOREST_BACKGROUND_01, FOREST_BACKGROUND_02, FOREST_BACKGROUND_03, 
+        SKY_BACKGROUND_01;
     }
 
     public static float getFrictionCoefficient(FrictionCoefficient frictionCoefficient) {
@@ -97,6 +98,8 @@ public abstract class Level extends World {
                 return new File("data/forestBackground03.jpeg");
             case FOREST_BACKGROUND_03:
                 return new File("data/forestBackground02.png");
+            case SKY_BACKGROUND_01: 
+                return new File("data/skyBackground01.png");
             default:
                 return null;
         }

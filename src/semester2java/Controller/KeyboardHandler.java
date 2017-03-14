@@ -315,7 +315,7 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         } else if (e.getSource().equals(level2)){
             levels.setLevel(Levels.LevelNumber.LEVEL2);
         } else if (e.getSource().equals(level3)){
-            levels.setLevel(Levels.LevelNumber.LEVEL1);
+            levels.setLevel(Levels.LevelNumber.LEVEL3);
         } else if (e.getSource().equals(level4)){
             levels.setLevel(Levels.LevelNumber.LEVEL1);
         }

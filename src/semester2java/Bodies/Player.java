@@ -22,7 +22,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.jbox2d.common.Vec2;
-import semester2java.Levels.Event.EndGame;
 import semester2java.Levels.Levels;
 
 /**
@@ -47,15 +46,13 @@ public class Player extends Walker implements CollisionListener {
     private Vec2 jump;
     private boolean canJump; //should only evaluate to true when a player is on a surface
     private Projectile playerProjectile;
-    private static EndGame ENDGAME;
     private JPanel healthPanel, projectilePanel;
     private final Levels levels;
     private SolidFixture prevCollision;
 
-    public Player(World world,Levels levels) {
+    public Player(World world, Levels levels) {
         super(world);
-        this.levels=levels;
-        ENDGAME=new EndGame();
+        this.levels = levels;
         drawPlayer();
         hearts = 3;
         defaultHealth = "";
@@ -75,7 +72,7 @@ public class Player extends Walker implements CollisionListener {
         projectilePanel.setLayout(new BoxLayout(projectilePanel, BoxLayout.LINE_AXIS));
         projectilePanel.setBackground(new Color(0, 0, 0, 0));
         healthPanel = new JPanel();
-        healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.LINE_AXIS));        
+        healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.LINE_AXIS));
         healthPanel.setBackground(new Color(0, 0, 0, 0));
     }
 
@@ -89,7 +86,7 @@ public class Player extends Walker implements CollisionListener {
         Shape rightWing = new PolygonShape(0.885f, 0.303f, 0.985f, 0.221f, 1.015f, 0.125f, 1.012f, -0.121f, 0.875f, -0.426f, 0.708f, -0.569f, 0.537f, -0.621f);
         SolidFixture rightWingFixture = new SolidFixture(this, rightWing);
         changeFriction(rightWingFixture);
-        rightWingFixture.setRestitution(0.4f); //give slight restitution to wings to allow player to bounce off wall and not slide up it
+        rightWingFixture.setRestitution(0.6f); //give slight restitution to wings to allow player to bounce off wall and not slide up it
 
         Shape leftWing = new PolygonShape(-0.879f, 0.309f, -0.961f, 0.251f, -1.022f, 0.142f, -1.029f, 0.005f, -0.968f, -0.248f, -0.875f, -0.415f, -0.718f, -0.566f, -0.523f, -0.621f);
         SolidFixture leftWingFixture = new SolidFixture(this, leftWing);
@@ -110,8 +107,8 @@ public class Player extends Walker implements CollisionListener {
         this.setName("player");
         this.addCollisionListener(this);
     }
-    
-    public void cleanup(){
+
+    public void cleanup() {
         levels.getLayeredPane().remove(healthPanel);
         levels.getLayeredPane().remove(projectilePanel);
     }
@@ -131,7 +128,7 @@ public class Player extends Walker implements CollisionListener {
                     health = health.substring(0, i) + temp;
                     if (temp == 0) {
                         //fire endgame event as player is on 0 health
-                        ENDGAME.endGame();
+                        levels.getLevel().endGame();
 //                        System.out.println("end");
 
                     }
@@ -184,9 +181,10 @@ public class Player extends Walker implements CollisionListener {
 
     public void setHealthPanel(JPanel healthPanel) {
         this.healthPanel = healthPanel;
-        
+
     }
-    public JPanel getHealthPanel(){
+
+    public JPanel getHealthPanel() {
         return healthPanel;
     }
 
@@ -301,7 +299,7 @@ public class Player extends Walker implements CollisionListener {
     public Projectile getPlayerProjectile() {
         return playerProjectile;
     }
-    
+
     //players collision listener
     @Override
     public void collide(CollisionEvent e) {
@@ -330,6 +328,15 @@ public class Player extends Walker implements CollisionListener {
             this.applyImpulse(difference.mul(-250f));
             decrementHalfHeart();
 
+        } else if (e.getOtherBody() instanceof SawBlade) {
+            SawBlade saw = (SawBlade) e.getOtherBody();
+            Vec2 temp1 = this.getPosition();
+            Vec2 temp2 = e.getOtherBody().getPosition();
+            Vec2 difference = temp2.sub(temp1);
+            difference.normalize();
+            saw.applyImpulse(difference.mul(5f));
+            decrementHalfHeart();
+
         } else if (e.getOtherBody().getName() != null) {
             switch (e.getOtherBody().getName()) {
                 case "standardEnemy":
@@ -340,7 +347,8 @@ public class Player extends Walker implements CollisionListener {
                     e.getOtherBody().destroy();
                     for (int i = 0; i < 2; i++) {
                         this.incrementHalfHeart();
-                    }   break;
+                    }
+                    break;
                 case "end":
                     e.getOtherBody().destroy();
                     levels.getLevel().fireChangeLevelEvent();

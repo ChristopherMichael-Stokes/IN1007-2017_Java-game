@@ -12,6 +12,7 @@ import city.cs.engine.World;
 import java.io.Serializable;
 import org.jbox2d.common.Vec2;
 import semester2java.Bodies.AIBodies.Worm;
+import semester2java.Bodies.SawBlade;
 import semester2java.Bodies.SpikedBarrel;
 import semester2java.Levels.Level;
 
@@ -25,7 +26,7 @@ public final class Level1 extends Level implements Serializable {
 
     private final Vec2 start;
     private static final BodyImage W3
-            = new BodyImage(getTextureLocation(Textures.WOOD_03), 15);
+            = new BodyImage(getTextureLocation(Textures.CONCRETE_03), 15);
 
     public Level1() {
         super();
@@ -100,9 +101,10 @@ public final class Level1 extends Level implements Serializable {
         new Worm((World)this).putOn(getBody("platform9"));
         getBody("platform9").setName("end");
         
-        setBackground(Backgrounds.FOREST_BACKGROUND_01);
         
-        changeFriction(getFrictionCoefficient(FrictionCoefficient.WOOD));
+        setBackground(Backgrounds.FOREST_BACKGROUND_02);
+        
+        changeFriction(getFrictionCoefficient(FrictionCoefficient.CONCRETE));
         getBodies().forEach((k, v) -> {
             v.setClipped(true);
             v.addImage(W3);

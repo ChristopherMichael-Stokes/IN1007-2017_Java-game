@@ -21,15 +21,13 @@ import org.jbox2d.common.Vec2;
 import semester2java.Bodies.Player;
 import semester2java.Bodies.Projectile;
 
-
-
 /**
  *
  * @author chris
  */
 public class Worm extends Walker implements CollisionListener {
 
-    private World world;
+    private final World world;
     private Player player;
     private Vec2 playerPosition;
     private int health;
@@ -44,8 +42,8 @@ public class Worm extends Walker implements CollisionListener {
         super(world);
         this.world = world;
         dropHealthChance = Math.random();
-        threshold = 0.6;
-        health=1;
+        threshold = 0.8f;
+        health = 1;
         drawWorm();
     }
 
@@ -61,7 +59,7 @@ public class Worm extends Walker implements CollisionListener {
         this.setName("standardEnemy");
         this.setPosition(new Vec2(0, 0));
         this.setAngle(-(float) Math.PI / 5);
-        
+
         this.addCollisionListener(this);
     }
 
@@ -92,6 +90,14 @@ public class Worm extends Walker implements CollisionListener {
 
     }
 
+    public double getDropHealthChance() {
+        return dropHealthChance;
+    }
+
+    public void setDropHealthChance(double dropHealthChance) {
+        this.dropHealthChance = dropHealthChance;
+    }
+
     public double getThreshold() {
         return threshold;
     }
@@ -115,7 +121,11 @@ public class Worm extends Walker implements CollisionListener {
             if (health > 0) {
                 decrementHealth();
             } else {
+                //if using this, worm will always drop health
                 setHealthDrop(true);
+
+                //if using this, worm will drop health 80% of the time
+//                setHealthDrop(healthDrop());
             }
         }
     }
