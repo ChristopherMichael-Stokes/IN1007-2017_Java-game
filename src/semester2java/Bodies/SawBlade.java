@@ -42,7 +42,7 @@ public class SawBlade extends DynamicBody implements StepListener, CollisionList
         SolidFixture bodyFixture = new SolidFixture(this, bodyShape);
         bodyFixture.setFriction(0.8f);
         bodyFixture.setRestitution(0.7f);
-        bodyFixture.setDensity(20);
+        bodyFixture.setDensity(40);
         addImage(image);
         setName("standardEnemy");
 
