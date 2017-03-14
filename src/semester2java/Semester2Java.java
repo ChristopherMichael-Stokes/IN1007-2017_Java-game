@@ -75,21 +75,21 @@ public class Semester2Java extends SimulationSettings {
         layeredPane.add(projectilePanel, 0);
         projectilePanel.setBounds(20, health.getHeight() + 5, resolutionX - 20, 50);
 
-        layeredPane.add(view, -1);
+        layeredPane.add(view, 1);
 
-        JLabel background = new JLabel();
-        try {
-            BufferedImage myPicture = ImageIO.read(FOREST_01);
-            background = new JLabel(new ImageIcon(myPicture));
-        } catch (IOException e) {
-            //if the image is missing paint the background blue
-            System.out.println("Background image missing\n" + e);
-            background.setOpaque(true);
-            background.setBackground(Color.CYAN);
-        } finally {
-            layeredPane.add(background, -1);
-            background.setBounds(0, 0, resolutionX, resolutionY);
-        }
+//        JLabel background = new JLabel();
+//        try {
+//            BufferedImage myPicture = ImageIO.read(FOREST_01);
+//            background = new JLabel(new ImageIcon(myPicture));
+//        } catch (IOException e) {
+//            //if the image is missing paint the background blue
+//            System.out.println("Background image missing\n" + e);
+//            background.setOpaque(true);
+//            background.setBackground(Color.CYAN);
+//        } finally {
+//            layeredPane.add(background, -1);
+//            background.setBounds(0, 0, resolutionX, resolutionY);
+//        }
 
         kh = levels.getKeyboardHandler();
         frame.addKeyListener(kh);

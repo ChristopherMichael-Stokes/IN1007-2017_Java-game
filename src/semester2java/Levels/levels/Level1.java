@@ -21,7 +21,7 @@ import semester2java.Levels.Level;
  *
  * @author Christopher
  */
-public class Level1 extends Level implements Serializable {
+public final class Level1 extends Level implements Serializable {
 
     private final Vec2 start;
     private static final BodyImage W3
@@ -33,7 +33,8 @@ public class Level1 extends Level implements Serializable {
         initializeLevel();
     }
 
-    private void initializeLevel() {
+    @Override
+    protected void initializeLevel() {
         //the purpose of this method is to avoid putting overridable
         //method calls in the constructor.
         float pi = (float) Math.PI;
@@ -99,11 +100,15 @@ public class Level1 extends Level implements Serializable {
         new Worm((World)this).putOn(getBody("platform9"));
         getBody("platform9").setName("end");
         
+        setBackground(Backgrounds.FOREST_BACKGROUND_01);
+        
         changeFriction(getFrictionCoefficient(FrictionCoefficient.WOOD));
         getBodies().forEach((k, v) -> {
             v.setClipped(true);
             v.addImage(W3);
         });
     }
+    
+   
 
 }

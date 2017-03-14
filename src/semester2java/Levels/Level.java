@@ -11,6 +11,7 @@ import city.cs.engine.Shape;
 import city.cs.engine.SolidFixture;
 import city.cs.engine.StaticBody;
 import city.cs.engine.World;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,19 +23,18 @@ import semester2java.Levels.Event.ChangeLevelListener;
 import semester2java.Levels.Event.EndGameEvent;
 import semester2java.Levels.Event.EndGameListener;
 
-
-
 /**
  *
  * @author Christopher
  */
-public class Level extends World {
+public abstract class Level extends World {
 
     private final Map<String, Body> bodies;
     private final Map<String, Shape> shapes;
     private static List<ChangeLevelListener> _listeners;
     private static List<EndGameListener> _listenersEndGame;
     private float mu;
+    private Backgrounds background;
 
     //all texture paths   
     public enum Textures {
@@ -44,6 +44,10 @@ public class Level extends World {
 
     public enum FrictionCoefficient {
         WOOD, CONCRETE, METAL
+    }
+
+    public enum Backgrounds {
+        FOREST_BACKGROUND_01, FOREST_BACKGROUND_02, FOREST_BACKGROUND_03;
     }
 
     public static float getFrictionCoefficient(FrictionCoefficient frictionCoefficient) {
@@ -85,6 +89,20 @@ public class Level extends World {
         }
     }
 
+    public File chooseBackground(Backgrounds background) {
+        switch (background) {
+            case FOREST_BACKGROUND_01:
+                return new File("data/forestBackground01.jpg");
+            case FOREST_BACKGROUND_02:
+                return new File("data/forestBackground03.jpeg");
+            case FOREST_BACKGROUND_03:
+                return new File("data/forestBackground02.png");
+            default:
+                return null;
+        }
+
+    }
+
     public Level() {
         shapes = new HashMap<>();
         bodies = new HashMap<>();
@@ -92,6 +110,8 @@ public class Level extends World {
         _listenersEndGame = new ArrayList<>();
         this.stop();
     }
+
+    protected abstract void initializeLevel();
 
     public World getWorld() {
         return this;
@@ -132,6 +152,14 @@ public class Level extends World {
         bodies.put(key, sb);
     }
 
+    public void setBackground(Backgrounds background) {
+        this.background = background;
+    }
+
+    public File getBackground() {
+        return chooseBackground(background);
+    }
+
     public void changeFriction(float mu) {
         //change friction for all bodies
         bodies.forEach((k, v) -> {
@@ -159,8 +187,8 @@ public class Level extends World {
             ((ChangeLevelListener) listeners.next()).changeLevel(event);
         }
     }
-    
-     public synchronized void addEndGameListener(EndGameListener listener) {
+
+    public synchronized void addEndGameListener(EndGameListener listener) {
         _listenersEndGame.add(listener);
     }
 

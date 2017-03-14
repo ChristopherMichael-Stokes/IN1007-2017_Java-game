@@ -12,10 +12,16 @@ import city.cs.engine.StepEvent;
 import city.cs.engine.StepListener;
 import city.cs.engine.UserView;
 import city.cs.engine.World;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.EnumSet;
 import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Map;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import org.jbox2d.common.Vec2;
 import semester2java.Bodies.Player;
@@ -65,18 +71,19 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
     private Level level;
     private UserView view;
     private Player player;
-    private KeyboardHandler kh;
+    private final KeyboardHandler kh;
     private final JLayeredPane layeredPane;
     private final int resolutionX, resolutionY;
     private MouseHandler mh;
     private Runnable r1, r2;
     private final Semester2Java game;
+    private JLabel background;
 
     public Levels(JLayeredPane layeredPane, int resolutionX, int resolutionY, Semester2Java game) {
         this.layeredPane = layeredPane;
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
-        level = new Level();
+        level = new Level1();
         level.start();
         view = new UserView(level, resolutionY, resolutionY);
         player = new Player(level, this);
@@ -84,6 +91,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         kh = new KeyboardHandler(level, player, layeredPane);
         this.game = game;
         levelNumber = LevelNumber.LEVEL1;
+        background = new JLabel();
         changeLevel();
     }
 
@@ -116,7 +124,6 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
 
             case LEVEL4:
                 level.stop();
-                nextLevel(new Level());
                 System.out.println("make level4!");
                 break;
 
@@ -130,12 +137,15 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         this.level.removeChangeLevelListener(this);
         this.level.removeEndGameListener(this);
         this.level.removeStepListener(this);
+        Level tempLevel = this.level;
         this.level = level;
         this.level.addChangeLevelListener(this);
         this.level.addEndGameListener(this);
         this.level.addStepListener(this);
         System.out.println(this.level.isRunning());
         initializePlayer(this.level);
+        initializeBackground(tempLevel);
+        
 //        game.getFrame().removeKeyListener(kh);
         kh.setWorld(player.getWorld());
         kh.setPlayer(player);
@@ -163,6 +173,25 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         mh = new MouseHandler(view, level, player);
         view.addMouseListener(mh);
         kh.setPlayer(player);
+    }
+    
+    private void initializeBackground(Level tempLevel) {
+//        layeredPane.remove(background);
+        layeredPane.remove(background);
+        background = new JLabel();
+        try {
+            BufferedImage myPicture = ImageIO.read(level.getBackground());
+            background = new JLabel(new ImageIcon(myPicture));
+        } catch (IOException e) {
+            //if the image is missing paint the background blue
+            System.out.println("Background image missing\n" + e);
+            background.setOpaque(true);
+            background.setBackground(Color.CYAN);
+        } finally {
+            layeredPane.add(background, 2);
+            background.setBounds(0, 0, resolutionX, resolutionY);
+        }
+        
     }
 
     public void incrementLevel() {
