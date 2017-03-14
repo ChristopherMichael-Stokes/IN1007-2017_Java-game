@@ -76,12 +76,13 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         this.layeredPane = layeredPane;
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
-        view = new UserView(new World(), resolutionY, resolutionY);
-        player = new Player(new World(), this);
         level = new Level();
-        mh = new MouseHandler(view, level, player);        
+        level.start();
+        view = new UserView(level, resolutionY, resolutionY);
+        player = new Player(level, this);
+        mh = new MouseHandler(view, level, player);
         kh = new KeyboardHandler(level, player, layeredPane);
-        this.game=game;
+        this.game = game;
         levelNumber = LevelNumber.LEVEL1;
         changeLevel();
     }
@@ -90,9 +91,9 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         Level tempLevel;
         switch (levelNumber) {
             case LEVEL1:
-                tempLevel=new Level1();
+                tempLevel = new Level1();
                 nextLevel(tempLevel);
-                
+
                 initializeView();
                 level.start();
                 break;
@@ -100,10 +101,10 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
             case LEVEL2:
                 tempLevel = new Level2();
                 nextLevel(tempLevel);
-                
+
                 layeredPane.remove(view);
                 initializeView();
-                layeredPane.add(view,0);
+                layeredPane.add(view, 0);
 
                 System.out.println("Im on a new level");
                 break;
@@ -112,7 +113,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
                 level.stop();
                 System.out.println("make level3!");
                 break;
-                
+
             case LEVEL4:
                 level.stop();
                 nextLevel(new Level());
@@ -134,7 +135,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         this.level.addEndGameListener(this);
         this.level.addStepListener(this);
         System.out.println(this.level.isRunning());
-        initializePlayer(this.level);    
+        initializePlayer(this.level);
 //        game.getFrame().removeKeyListener(kh);
         kh.setWorld(player.getWorld());
         kh.setPlayer(player);
@@ -150,8 +151,8 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         player.setAngle(0);
         player.getHealthPanel().setBounds(20, 5, resolutionX - 20, 50);
         player.getProjectilePanel().setBounds(20, player.getHealthPanel().getHeight() + 5, resolutionX - 20, 50);
-        layeredPane.add(player.getHealthPanel(),0);
-        layeredPane.add(player.getProjectilePanel(),0);
+        layeredPane.add(player.getHealthPanel(), 0);
+        layeredPane.add(player.getProjectilePanel(), 0);
     }
 
     private void initializeView() {
@@ -185,15 +186,14 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
     public Player getPlayer() {
         return player;
     }
-    
-    public KeyboardHandler getKeyboardHandler(){
+
+    public KeyboardHandler getKeyboardHandler() {
         return kh;
     }
-    
-    public JLayeredPane getLayeredPane(){
+
+    public JLayeredPane getLayeredPane() {
         return layeredPane;
     }
-    
 
     //abstract event methods
     @Override
