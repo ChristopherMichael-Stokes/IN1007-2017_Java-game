@@ -37,7 +37,7 @@ public final class Level3 extends Level implements StepListener {
         initializeLevel();
         
         //give random function a seed for debugging purposes
-        rFloat = new Random(1);        
+        rFloat = new Random(50);        
     }
 
     @Override
@@ -126,7 +126,7 @@ public final class Level3 extends Level implements StepListener {
     @Override
     public void postStep(StepEvent e) {
         stepCount++;
-        if (stepCount % 60 == 0) {
+        if (stepCount % 45 == 0) {
             stepCount = 0;
             // x is position i have, a and b is 0.0 and 1.0
             // d and c are limits for barrel spawnPosition

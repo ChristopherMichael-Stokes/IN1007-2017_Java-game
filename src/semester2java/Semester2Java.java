@@ -1,6 +1,5 @@
 /*
  * This is the main class, the levels, frame and panels are instantiated here.
- * The class also handles simulation steps under a seperate thread
  *
  */
 package semester2java;

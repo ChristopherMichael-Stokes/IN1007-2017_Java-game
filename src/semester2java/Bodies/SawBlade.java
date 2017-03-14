@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This is a subtype of body, and is designed to rotate in a given direction,
+ * it will take two shots to destroy this.
  */
 package semester2java.Bodies;
 

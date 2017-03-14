@@ -32,6 +32,7 @@ import semester2java.Controller.MouseHandler;
 import semester2java.Levels.Event.ChangeLevelListener;
 import semester2java.Levels.Event.EndGameListener;
 import semester2java.Levels.levels.Level3;
+import semester2java.Levels.levels.Level4;
 import semester2java.Semester2Java;
 
 /**
@@ -82,7 +83,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     private final Semester2Java game;
     private JLabel background;
     private JFrame debugView;
-    
+
     public Levels(JLayeredPane layeredPane, int resolutionX, int resolutionY, Semester2Java game) {
         this.layeredPane = layeredPane;
         this.resolutionX = resolutionX;
@@ -104,46 +105,35 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         Level tempLevel;
         switch (levelNumber) {
             case LEVEL1:
-                tempLevel = new Level1();
-                nextLevel(tempLevel);
-
-                layeredPane.remove(view);
-                initializeView();
-                layeredPane.add(view, 1);
-                
-                level.start();
+                switchLevel(new Level1());
                 break;
 
             case LEVEL2:
-                tempLevel = new Level2();
-                nextLevel(tempLevel);
-
-                layeredPane.remove(view);
-                initializeView();
-                layeredPane.add(view, 1);
-
-                System.out.println("Im on a new level");
+                switchLevel(new Level2());
                 break;
 
             case LEVEL3:
-                tempLevel = new Level3();
-                nextLevel(tempLevel);
-
-                layeredPane.remove(view);
-                initializeView();
-                layeredPane.add(view, 1);
-
-                System.out.println("Im on a new level");
+                switchLevel(new Level3());
                 break;
 
             case LEVEL4:
-                level.stop();
-                System.out.println("make level4!");
+                switchLevel(new Level4());
                 break;
 
             default:
                 System.out.println("handle this pls");
         }
+
+    }
+
+    private void switchLevel(Level level) {
+        nextLevel(level);
+
+        layeredPane.remove(view);
+        initializeView();
+        layeredPane.add(view, 1);
+
+        level.start();
 
     }
 
@@ -163,10 +153,9 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         initializeBackground(tempLevel);
         //uncomment to show debug viewer
 //        debugView = new DebugViewer(this.level, resolutionX, resolutionY);
-        
+
 //        game.getFrame().removeKeyListener(kh);       
 //        game.getFrame().addKeyListener(kh);
-
         level.start();
     }
 
@@ -188,15 +177,13 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         view.setOpaque(false);
         mh = new MouseHandler(view, level, player);
         view.addMouseListener(mh);
-        
+
         kh.setWorld(player.getWorld());
         kh.setPlayer(player);
         game.getFrame().requestFocus();
-        
-        
-        
+
     }
-    
+
     private void initializeBackground(Level tempLevel) {
 //        layeredPane.remove(background);
         layeredPane.remove(background);
@@ -213,14 +200,14 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
             layeredPane.add(background, 2);
             background.setBounds(0, 0, resolutionX, resolutionY);
         }
-        
+
     }
-    
-    public void setLevel(LevelNumber levelNumber){
+
+    public void setLevel(LevelNumber levelNumber) {
         this.levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode());
         changeLevel();
     }
-    
+
     public void incrementLevel() {
         //TODO add logic to make sure level is less than total levels in enum
         levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode() + 1);
@@ -250,7 +237,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     public JLayeredPane getLayeredPane() {
         return layeredPane;
     }
-   
+
     //abstract event methods
     @Override
     public void changeLevel(EventObject e) {
@@ -271,7 +258,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         if (player.canJump() && player.getLinearVelocity().y == 0) {
             newCentre.y = player.getPosition().y;
             player.setDefaultImage();
-        } else if (Math.abs(view.getCentre().y-player.getPosition().y)>10){            
+        } else if (Math.abs(view.getCentre().y - player.getPosition().y) > 10) {
             newCentre.y = player.getPosition().y;
         }
         if (!player.canJump() && player.getLinearVelocity().y < -0.5f) {
@@ -281,9 +268,9 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         if (player.getLinearVelocity().y > 10) {
             player.setLinearVelocity(new Vec2(player.getLinearVelocity().x, 9));
         }
-        
+
         //if player falls off a platform
-        if (player.getPosition().y<-30f){
+        if (player.getPosition().y < -30f) {
             System.out.println("ending game");
             level.endGame();
         }
