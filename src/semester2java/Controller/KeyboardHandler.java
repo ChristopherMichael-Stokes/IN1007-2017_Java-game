@@ -27,8 +27,7 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import org.jbox2d.common.Vec2;
 import semester2java.Bodies.Player;
-
-
+import semester2java.Levels.Levels;
 
 /**
  *
@@ -36,23 +35,25 @@ import semester2java.Bodies.Player;
  */
 public class KeyboardHandler implements KeyListener, ActionListener {
 
+    private static Levels levels;
     private Runnable r1;
     private int key;
     private LayoutManager layout;
     private GridBagConstraints gBC;
     private JLabel confirmationLbl, pauseText;
     private JPanel pauseBackground, confirmation;
-    private JButton rebindKey, play;
+    private JButton rebindKey, play, level1, level2, level3, level4;
     private World world;
     private Player player;
     private final JLayeredPane layeredPane;
     //player bound keys
     private Map<String, Integer> keyBinds;
 
-    public KeyboardHandler(World world, Player player, JLayeredPane layeredPane) {
+    public KeyboardHandler(World world, Player player, JLayeredPane layeredPane, Levels levels) {
         this.world = world;
         this.player = player;
         this.layeredPane = layeredPane;
+        KeyboardHandler.levels=levels;
         keyBinds = new TreeMap<>();
 
         //default key bindings
@@ -86,18 +87,22 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         new Thread(r1).start();
         System.out.println("nothing");
     }
-    
-    public void setPlayer(Player player){
-        this.player=player;
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
-    public void setWorld(World world){
-        this.world=world;
+
+    public void setWorld(World world) {
+        this.world = world;
     }
-    
 
     private void rk() {
         layeredPane.moveToBack(pauseBackground);
         pauseBackground.remove(rebindKey);
+        pauseBackground.remove(level1);
+        pauseBackground.remove(level2);
+        pauseBackground.remove(level3);
+        pauseBackground.remove(level4);
         gBC.gridy = 2;
         gBC.gridwidth = 2;
         pauseBackground.add(new JLabel(" "), gBC);
@@ -105,10 +110,10 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         int i = 2;
         for (Map.Entry<String, Integer> entry : keyBinds.entrySet()) {
             gBC.fill = GridBagConstraints.BOTH;
-            gBC.gridx = 0;
+            gBC.gridx = 1;
             gBC.gridy = i + 1;
             pauseBackground.add(new JLabel(entry.getKey()), gBC);
-            gBC.gridx = 1;
+            gBC.gridx = 2;
             JFormattedTextField textField = new JFormattedTextField();
             String keyValue;
             int value = entry.getValue();
@@ -137,28 +142,52 @@ public class KeyboardHandler implements KeyListener, ActionListener {
 
         pauseText = new JLabel("The game is currently paused");
         pauseText.setFont(new Font(pauseText.getFont().getName(), Font.PLAIN, 20));
-        gBC.gridx = 0;
+        gBC.gridx = 1;
         gBC.gridy = 0;
         gBC.gridwidth = 2;
         pauseBackground.add(pauseText, gBC);
 
         play = new JButton("Click to resume game");
         play.addActionListener(this);
-        gBC.gridx = 0;
+//        gBC.gridx = 1;
         gBC.gridy = 1;
         pauseBackground.add(play, gBC);
 
         rebindKey = new JButton("Reconfigure Controls");
         rebindKey.addActionListener(this);
-        gBC.gridx = 1;
+//        gBC.gridx = 1;
         gBC.gridy = 2;
-        gBC.gridwidth = 1;
+//        gBC.gridwidth = 1;
         pauseBackground.add(rebindKey, gBC);
+
+//        gBC.fill = GridBagConstraints.HORIZONTAL;
+        gBC.gridwidth = 1;
+        gBC.gridy = 1;
+        gBC.gridx = 0;
+        level1 = new JButton("LEVEL 1");
+        level1.addActionListener(this);
+        pauseBackground.add(level1, gBC);
+
+        gBC.gridy++;
+        level2 = new JButton("LEVEL 2");
+        level2.addActionListener(this);
+        pauseBackground.add(level2, gBC);
+
+        gBC.gridy++;
+        level3 = new JButton("LEVEL 3");
+        level3.addActionListener(this);
+        pauseBackground.add(level3, gBC);
+
+        gBC.gridy++;
+        level4 = new JButton("LEVEL 4");
+        level4.addActionListener(this);
+        pauseBackground.add(level4, gBC);
+
     }
 
     private void pause() {
         world.stop();
-        layeredPane.moveToFront(pauseBackground);        
+        layeredPane.moveToFront(pauseBackground);
     }
 
     private void unPause() {
@@ -167,11 +196,14 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         buildPauseBackground();
         layeredPane.moveToBack(pauseBackground);
     }
-    
+
     @Override
     public void keyPressed(KeyEvent e) {
 
         key = e.getKeyCode();
+        if (key == KeyEvent.VK_Q){
+            System.out.println("q");
+        }
         //global code to change pause state
         if (key == keyBinds.get("pause")) {
 
@@ -209,8 +241,8 @@ public class KeyboardHandler implements KeyListener, ActionListener {
             }
         }
     }
-    
-    public JPanel getPauseBackground(){
+
+    public JPanel getPauseBackground() {
         return pauseBackground;
     }
 
@@ -278,8 +310,16 @@ public class KeyboardHandler implements KeyListener, ActionListener {
             unPause();
         } else if (e.getSource().equals(rebindKey)) {
             rk();
+        } else if (e.getSource().equals(level1)){
+            levels.setLevel(Levels.LevelNumber.LEVEL1);
+        } else if (e.getSource().equals(level2)){
+            levels.setLevel(Levels.LevelNumber.LEVEL2);
+        } else if (e.getSource().equals(level3)){
+            levels.setLevel(Levels.LevelNumber.LEVEL1);
+        } else if (e.getSource().equals(level4)){
+            levels.setLevel(Levels.LevelNumber.LEVEL1);
         }
 
     }
-    
+
 }

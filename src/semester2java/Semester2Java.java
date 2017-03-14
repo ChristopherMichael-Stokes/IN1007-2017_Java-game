@@ -5,18 +5,13 @@
  */
 package semester2java;
 
+import city.cs.engine.DebugViewer;
 import city.cs.engine.SimulationSettings;
 import city.cs.engine.UserView;
 import city.cs.engine.World;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 import semester2java.Controller.KeyboardHandler;
@@ -49,6 +44,7 @@ public class Semester2Java extends SimulationSettings {
         // quit the application when the game window is closed
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationByPlatform(true);
+        frame.setAutoRequestFocus(true);
 
         layeredPane = new JLayeredPane();
         layeredPane.setOpaque(false);

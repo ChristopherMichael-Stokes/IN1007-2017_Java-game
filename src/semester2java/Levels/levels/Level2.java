@@ -42,6 +42,38 @@ public final class Level2 extends Level implements Serializable {
         Shape shape = new BoxShape(3, 0.5f);
         setBody(true, "start", shape, start, 0);
         
+        start.x += 10f;
+        start.y += 1f;
+        Shape pf1 = new BoxShape(3, 0.5f);
+        setBody(true, "platform1", pf1, start, 0);
+        
+        start.x += 20f;
+        Shape pf2 = new BoxShape(7,0.5f);
+        setBody(true, "platform2", pf2, start, 0);
+                
+        start.x += 11f;
+        start.y += 7f;
+        Shape pf3 = new BoxShape(7.25f,0.5f);
+        setBody(true, "platform3", pf3, start, pi/2);
+        
+        start.x -= 11f;
+        start.y -= 1f;
+        Shape pf4 = new BoxShape(3f,0.5f);
+        setBody(true, "platform4", pf4, start, 0);
+        
+        start.x += 9f;
+        start.y += 6f;
+        setBody(true, "platform5", pf4, start, pi/4);
+        
+        start.x += 11f;
+        start.y += 3f;
+        Shape pf6 = new BoxShape(4f,0.5f);
+        setBody(true, "platform6", pf6, start, 0);
+        
+        start.y -= 17f;
+        setBody(true, "platform7", pf6, start, 0);
+        getBody("platform7").setName("end");
+        
         setBackground(Backgrounds.FOREST_BACKGROUND_02);
 
         changeFriction(getFrictionCoefficient(FrictionCoefficient.METAL));

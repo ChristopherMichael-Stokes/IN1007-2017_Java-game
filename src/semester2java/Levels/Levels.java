@@ -28,6 +28,7 @@ import semester2java.Bodies.Player;
 import semester2java.Controller.KeyboardHandler;
 import semester2java.Controller.MouseHandler;
 import semester2java.Levels.Event.ChangeLevelListener;
+import semester2java.Levels.Event.EndGame;
 import semester2java.Levels.Event.EndGameListener;
 import semester2java.Semester2Java;
 
@@ -35,11 +36,11 @@ import semester2java.Semester2Java;
  *
  * @author Christopher
  */
-public class Levels implements ChangeLevelListener, StepListener, EndGameListener {
+public final class Levels implements ChangeLevelListener, StepListener, EndGameListener {
 
 //this class is a collection of all the levels and allows for levels to 
 //interact with each other
-    private enum LevelNumber {
+    public enum LevelNumber {
         LEVEL1(1), LEVEL2(2), LEVEL3(3), LEVEL4(4);
 
         private static final Map<Integer, LevelNumber> lookup
@@ -88,21 +89,24 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         view = new UserView(level, resolutionY, resolutionY);
         player = new Player(level, this);
         mh = new MouseHandler(view, level, player);
-        kh = new KeyboardHandler(level, player, layeredPane);
+        kh = new KeyboardHandler(level, player, layeredPane, this);
         this.game = game;
         levelNumber = LevelNumber.LEVEL1;
         background = new JLabel();
         changeLevel();
     }
 
-    private void changeLevel() {
+    public void changeLevel() {
         Level tempLevel;
         switch (levelNumber) {
             case LEVEL1:
                 tempLevel = new Level1();
                 nextLevel(tempLevel);
 
+                layeredPane.remove(view);
                 initializeView();
+                layeredPane.add(view, 1);
+                
                 level.start();
                 break;
 
@@ -112,7 +116,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
 
                 layeredPane.remove(view);
                 initializeView();
-                layeredPane.add(view, 0);
+                layeredPane.add(view, 1);
 
                 System.out.println("Im on a new level");
                 break;
@@ -146,12 +150,10 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         initializePlayer(this.level);
         initializeBackground(tempLevel);
         
-//        game.getFrame().removeKeyListener(kh);
-        kh.setWorld(player.getWorld());
-        kh.setPlayer(player);
+//        game.getFrame().removeKeyListener(kh);       
 //        game.getFrame().addKeyListener(kh);
-        level.start();
 
+        level.start();
     }
 
     private void initializePlayer(Level level) {
@@ -172,7 +174,13 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         view.setOpaque(false);
         mh = new MouseHandler(view, level, player);
         view.addMouseListener(mh);
+        
+        kh.setWorld(player.getWorld());
         kh.setPlayer(player);
+        game.getFrame().requestFocus();
+        
+        
+        
     }
     
     private void initializeBackground(Level tempLevel) {
@@ -193,7 +201,12 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         }
         
     }
-
+    
+    public void setLevel(LevelNumber levelNumber){
+        this.levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode());
+        changeLevel();
+    }
+    
     public void incrementLevel() {
         //TODO add logic to make sure level is less than total levels in enum
         levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode() + 1);
@@ -223,7 +236,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
     public JLayeredPane getLayeredPane() {
         return layeredPane;
     }
-
+   
     //abstract event methods
     @Override
     public void changeLevel(EventObject e) {
@@ -251,7 +264,12 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
         if (player.getLinearVelocity().y > 10) {
             player.setLinearVelocity(new Vec2(player.getLinearVelocity().x, 9));
         }
-
+        
+        if (player.getPosition().y<-30f){
+            System.out.println("ending game");
+            level.endGame();
+        }
+//        System.out.println(player.getPosition());
         view.setCentre(newCentre);
 
         player.drawPlayerShots();
@@ -263,7 +281,7 @@ public class Levels implements ChangeLevelListener, StepListener, EndGameListene
     @Override
     public void endGame(EventObject e) {
         System.out.println("game over");
-        world.stop();
+        changeLevel();
 
     }
 

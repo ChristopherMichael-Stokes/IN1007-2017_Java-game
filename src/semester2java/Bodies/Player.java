@@ -47,7 +47,7 @@ public class Player extends Walker implements CollisionListener {
     private Vec2 jump;
     private boolean canJump; //should only evaluate to true when a player is on a surface
     private Projectile playerProjectile;
-    private final EndGame endGame = new EndGame();
+    private static EndGame ENDGAME;
     private JPanel healthPanel, projectilePanel;
     private final Levels levels;
     private SolidFixture prevCollision;
@@ -55,6 +55,7 @@ public class Player extends Walker implements CollisionListener {
     public Player(World world,Levels levels) {
         super(world);
         this.levels=levels;
+        ENDGAME=new EndGame();
         drawPlayer();
         hearts = 3;
         defaultHealth = "";
@@ -130,7 +131,7 @@ public class Player extends Walker implements CollisionListener {
                     health = health.substring(0, i) + temp;
                     if (temp == 0) {
                         //fire endgame event as player is on 0 health
-                        endGame.endGame();
+                        ENDGAME.endGame();
 //                        System.out.println("end");
 
                     }
@@ -345,7 +346,7 @@ public class Player extends Walker implements CollisionListener {
                     levels.getLevel().fireChangeLevelEvent();
                     break;
                 default:
-                    //fix me?
+                    //handle this
                     break;
             }
 
