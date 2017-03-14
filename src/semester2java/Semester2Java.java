@@ -99,7 +99,8 @@ public class Semester2Java extends SimulationSettings {
 
 //        kh.initialize();
         // uncomment this to make a debugging view
-//        JFrame debugView = new DebugViewer(world, resolutionX, resolutionY);
+        
+
         // start!
     }
 

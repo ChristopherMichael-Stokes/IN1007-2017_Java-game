@@ -6,6 +6,7 @@
  */
 package semester2java.Levels;
 
+import city.cs.engine.DebugViewer;
 import semester2java.Levels.levels.Level2;
 import semester2java.Levels.levels.Level1;
 import city.cs.engine.StepEvent;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import org.jbox2d.common.Vec2;
@@ -79,7 +81,8 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     private Runnable r1, r2;
     private final Semester2Java game;
     private JLabel background;
-
+    private JFrame debugView;
+    
     public Levels(JLayeredPane layeredPane, int resolutionX, int resolutionY, Semester2Java game) {
         this.layeredPane = layeredPane;
         this.resolutionX = resolutionX;
@@ -93,6 +96,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         this.game = game;
         levelNumber = LevelNumber.LEVEL1;
         background = new JLabel();
+        debugView = new DebugViewer(this.level, resolutionX, resolutionY);
         changeLevel();
     }
 
@@ -144,6 +148,8 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     }
 
     private void nextLevel(Level level) {
+        //uncomment to show debug viewer
+        debugView.dispose();
         this.level.removeChangeLevelListener(this);
         this.level.removeEndGameListener(this);
         this.level.removeStepListener(this);
@@ -155,6 +161,8 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         System.out.println(this.level.isRunning());
         initializePlayer(this.level);
         initializeBackground(tempLevel);
+        //uncomment to show debug viewer
+//        debugView = new DebugViewer(this.level, resolutionX, resolutionY);
         
 //        game.getFrame().removeKeyListener(kh);       
 //        game.getFrame().addKeyListener(kh);
@@ -258,10 +266,13 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         //the xaxis of the view will always follow the player
         Vec2 newCentre = new Vec2(player.getPosition().x, view.getCentre().y);
 
-//        double distance = Math.abs(view.getCentre().y - player.getPosition().y);
+        //the y axis will only centre when player is on a platform,
+        //or when there is a 10 unit difference between the player and the view
         if (player.canJump() && player.getLinearVelocity().y == 0) {
             newCentre.y = player.getPosition().y;
             player.setDefaultImage();
+        } else if (Math.abs(view.getCentre().y-player.getPosition().y)>10){            
+            newCentre.y = player.getPosition().y;
         }
         if (!player.canJump() && player.getLinearVelocity().y < -0.5f) {
             player.jumpDown();
@@ -271,6 +282,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
             player.setLinearVelocity(new Vec2(player.getLinearVelocity().x, 9));
         }
         
+        //if player falls off a platform
         if (player.getPosition().y<-30f){
             System.out.println("ending game");
             level.endGame();

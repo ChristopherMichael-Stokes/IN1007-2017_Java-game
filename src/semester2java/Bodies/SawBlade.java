@@ -6,6 +6,8 @@
 package semester2java.Bodies;
 
 import city.cs.engine.BodyImage;
+import city.cs.engine.CollisionEvent;
+import city.cs.engine.CollisionListener;
 import city.cs.engine.DynamicBody;
 import city.cs.engine.PolygonShape;
 import city.cs.engine.Shape;
@@ -18,18 +20,20 @@ import city.cs.engine.World;
  *
  * @author Christopher
  */
-public class SawBlade extends DynamicBody implements StepListener {
+public class SawBlade extends DynamicBody implements StepListener, CollisionListener {
 
     private static final BodyImage image = new BodyImage("data/sawBlade.png", 4);
     private final World world;
     private float angVelocity;
     private final double pi;
+    private byte health;
 
     public SawBlade(World world) {
         super(world);
         this.world = world;
         pi = Math.PI;
         angVelocity = (float) (2 * pi);
+        health = 2;
         
         drawSawBlade();
     }
@@ -43,6 +47,7 @@ public class SawBlade extends DynamicBody implements StepListener {
         addImage(image);
         setName("standardEnemy");
 
+        addCollisionListener(this);
         world.addStepListener(this);
     }
 
@@ -65,6 +70,21 @@ public class SawBlade extends DynamicBody implements StepListener {
         if (this.getPosition().y < -30f){
             destroy();
             world.removeStepListener(this);
+            removeCollisionListener(this);
+        }
+    }
+
+    @Override
+    public void collide(CollisionEvent e) {
+        if (e.getOtherBody() instanceof Projectile) {
+            e.getOtherBody().destroy();
+            if (health > 1) {
+                health--;
+            } else if (health <= 1) {
+                destroy();
+                world.removeStepListener(this);
+                removeCollisionListener(this);
+            }
         }
     }
 

@@ -22,7 +22,7 @@ import semester2java.Levels.Level;
  *
  * @author Christopher
  */
-public final class Level1 extends Level implements Serializable {
+public final class Level1 extends Level {
 
     private final Vec2 start;
     private static final BodyImage W3
@@ -36,8 +36,6 @@ public final class Level1 extends Level implements Serializable {
 
     @Override
     protected void initializeLevel() {
-        //the purpose of this method is to avoid putting overridable
-        //method calls in the constructor.
         float pi = (float) Math.PI;
 
         Shape pf0Shape = new BoxShape(2.5f, 5.5f);

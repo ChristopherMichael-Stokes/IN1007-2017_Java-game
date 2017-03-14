@@ -48,7 +48,7 @@ public class Projectile extends DynamicBody implements CollisionListener {
 //        System.out.println(otherName);
 
 // destroy this object if it hits an object other than its shooting body
-        if (!(e.getOtherBody() instanceof Worm)) {
+        if (!(e.getOtherBody() instanceof Worm)&&!(e.getOtherBody() instanceof SawBlade)) {
 
             if (otherName == null) {
                 this.destroy();
