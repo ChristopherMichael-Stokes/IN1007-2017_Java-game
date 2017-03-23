@@ -32,7 +32,7 @@ public class HighScore {
     private final JLayeredPane layeredPane;
 
     public HighScore(JLayeredPane layeredPane) {
-        this.layeredPane=layeredPane;
+        this.layeredPane = layeredPane;
 
         readScoresFromFile();
 
@@ -40,19 +40,36 @@ public class HighScore {
 
     private String askForName() {
         //needs swing code to ask user to input name
-        String tempName = "";
+        String tempName;
+        String defaultMessage = "You must enter a name: ";
+        String message = defaultMessage;
+        String title = "Input Name";
+
         do {
-            tempName = JOptionPane.showInternalInputDialog(layeredPane, "Type in your name: ", "title", JOptionPane.QUESTION_MESSAGE);
-        } while (!scores.containsKey(tempName) || tempName == null || tempName.matches("/^$|\\s+/"));
-        
-        return tempName;        
+            tempName = JOptionPane.showInputDialog(layeredPane, message, title, JOptionPane.QUESTION_MESSAGE);
+
+            if (name == null) {
+                break;
+            } else if (tempName.matches("[ ]+")) {
+                message = "Enter a name that is not only spaces";
+            } else if (scores.containsKey(tempName)) {
+                message = "The name \"" + tempName + "\" exists.  Choose another name: ";
+            } else {
+//                message = "\""+tempName+"\" is not a valid name.  Choose another name: ";
+                message = defaultMessage;
+            }
+        } while (!scores.containsKey(tempName) || tempName.matches("[ ]+"));
+
+        return tempName;
     }
 
     public void finish() {
-        name=askForName();
+        name = askForName();
         scores.put(name, score);
         sortScores();
         outputScoresToFile();
+        
+        //needs to show scores
 
     }
 
