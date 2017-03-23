@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.jbox2d.common.Vec2;
+import semester2java.Levels.Level;
 import semester2java.Levels.Levels;
 
 /**
@@ -351,8 +352,9 @@ public class Player extends Walker implements CollisionListener {
                     break;
                 case "end":
                     e.getOtherBody().destroy();
-//                    levels.getLevel().fireChangeLevelEvent();
-                    levels.incrementLevel();
+                    Level tempLevel = (Level)getWorld();
+                    tempLevel.fireChangeLevelEvent();
+//                    levels.incrementLevel();
                     break;
                 default:
                     //handle this

@@ -7,6 +7,7 @@
 package semester2java.Levels;
 
 import city.cs.engine.DebugViewer;
+import city.cs.engine.DynamicBody;
 import semester2java.Levels.levels.Level2;
 import semester2java.Levels.levels.Level1;
 import city.cs.engine.StepEvent;
@@ -25,6 +26,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 import org.jbox2d.common.Vec2;
 import semester2java.Bodies.Player;
 import semester2java.Controller.KeyboardHandler;
@@ -84,23 +86,22 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     private final Semester2Java game;
     private JLabel background;
     private JFrame debugView;
-    private HighScore highScore;
 
     public Levels(JLayeredPane layeredPane, int resolutionX, int resolutionY, Semester2Java game) {
         this.layeredPane = layeredPane;
         this.resolutionX = resolutionX;
         this.resolutionY = resolutionY;
         level = new Level1();
-        level.start();
         view = new UserView(level, resolutionY, resolutionY);
         player = new Player((World)level, this);
+        
+        level.start();
         mh = new MouseHandler(view, level, player);
         kh = new KeyboardHandler(level, player, layeredPane, this);
         this.game = game;
         levelNumber = LevelNumber.LEVEL1;
         background = new JLabel();
         debugView = new DebugViewer(this.level, resolutionX, resolutionY);
-        highScore = new HighScore(layeredPane);
         changeLevel();
     }
 
@@ -108,11 +109,14 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         Level tempLevel;
         switch (levelNumber) {
             case LEVEL1:
-                switchLevel(new Level1());
+                Level level1 = new Level1();
+                switchLevel(level1);
                 break;
 
             case LEVEL2:
-                switchLevel(new Level2());
+                Level2 level2 = new Level2();
+                switchLevel(level2);
+                level2.spawnSawBlades(true);
                 break;
 
             case LEVEL3:
@@ -146,12 +150,12 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         this.level.removeChangeLevelListener(this);
         this.level.removeEndGameListener(this);
         this.level.removeStepListener(this);
+        this.level.getBodies().forEach((k,v) -> v.destroy());
         Level tempLevel = this.level;
         this.level = level;
         this.level.addChangeLevelListener(this);
         this.level.addEndGameListener(this);
         this.level.addStepListener(this);
-        System.out.println(this.level.isRunning());
         initializePlayer(this.level);
         initializeBackground(tempLevel);
         //uncomment to show debug viewer
@@ -165,7 +169,10 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     private void initializePlayer(Level level) {
         player.cleanup();
         player = new Player(level, this);
-        player.putOn(level.getBody("start"));
+        Vec2 startPosition = level.getBody("start").getPosition();
+        startPosition.y += 1;
+        player.setPosition(startPosition);
+//        player.putOn(level.getBody("start"));
         player.setAngle(0);
         player.getHealthPanel().setBounds(20, 5, resolutionX - 20, 50);
         player.getProjectilePanel().setBounds(20, player.getHealthPanel().getHeight() + 5, resolutionX - 20, 50);
@@ -227,7 +234,12 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     }
     
     private void gameComplete(){
-        highScore.finish();
+        level.stop();
+        JPanel scorePanel = new JPanel();
+        layeredPane.add(scorePanel);
+        scorePanel.setBounds(0,0,resolutionX,resolutionY);
+        new HighScore(scorePanel).finish();
+        
     }    
 
     public Level getLevel() {

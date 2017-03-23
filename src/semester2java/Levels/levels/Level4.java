@@ -25,21 +25,20 @@ public final class Level4 extends Level implements StepListener {
 
     private static float pi =(float) Math.PI;
     private int numSteps;
-    float sawBladeXPos;
-    private final Vec2 start;
+    private final Vec2 start, sawBladePos;
     private static final BodyImage W3
             = new BodyImage(getTextureLocation(Level.Textures.METAL_03), 15);
 
     public Level4() {
         super();
         start = new Vec2(0, -11.5f);
+        sawBladePos = new Vec2();
         numSteps = 0;
         initializeLevel();
     }
 
     @Override
-    protected void initializeLevel() {
-        
+    protected void initializeLevel() {        
 
         Shape pf0Shape = new BoxShape(2.5f, 5.5f);
         setBody(true, "0Shape", pf0Shape, start, 0);
@@ -56,7 +55,8 @@ public final class Level4 extends Level implements StepListener {
         start.x += 14.5f;
         start.y -= 4f;
         setBody(true, "platform2", pf1, start, -pi / 6);
-        sawBladeXPos = start.x ;
+        sawBladePos.x = start.x ;
+        sawBladePos.y = start.y;
         
         start.x += 10f;
         setBody(true, "platform3", shape, start, 0);
@@ -84,9 +84,9 @@ public final class Level4 extends Level implements StepListener {
         if (numSteps % 90 == 0) {
             numSteps = 0;
             SawBlade sb = new SawBlade((World)this);
-            sb.putOn(sawBladeXPos, getBody("platform2"));
+            sb.setPosition(sawBladePos);
+//            sb.putOn(sawBladeXPos, getBody("platform2"));
             sb.setAngVelocity(8*pi);
-            System.out.println("do");
         }
     }
 

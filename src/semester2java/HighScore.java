@@ -16,7 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JLayeredPane;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -29,10 +28,10 @@ public class HighScore {
     private int score;
     private Map<String, Integer> scores, sortedScores;
     private String name;
-    private final JLayeredPane layeredPane;
+    private final JPanel panel;
 
-    public HighScore(JLayeredPane layeredPane) {
-        this.layeredPane = layeredPane;
+    public HighScore(JPanel panel) {
+        this.panel = panel;
 
         readScoresFromFile();
 
@@ -46,7 +45,7 @@ public class HighScore {
         String title = "Input Name";
 
         do {
-            tempName = JOptionPane.showInputDialog(layeredPane, message, title, JOptionPane.QUESTION_MESSAGE);
+            tempName = JOptionPane.showInternalInputDialog(panel, message, title, JOptionPane.QUESTION_MESSAGE);
 
             if (name == null) {
                 break;

@@ -30,12 +30,13 @@ public final class Level2 extends Level implements StepListener, CollisionListen
     private static final BodyImage W3
             = new BodyImage(getTextureLocation(Level.Textures.WOOD_01), 15);
     private int numSteps;
-    private float sawBladeXPos;
+    private final Vec2 sawBladePos;
 
     public Level2() {
         super();
         start = new Vec2(0, -11.5f);
         numSteps = 0;
+        sawBladePos = new Vec2();
         initializeLevel();
     }
 
@@ -59,12 +60,13 @@ public final class Level2 extends Level implements StepListener, CollisionListen
         start.x += 13f;
         start.y += 7.5f;
         setBody(true, "platform2", pf1, start, pi / 6);
-        sawBladeXPos = start.x + 5;
+        sawBladePos.x = start.x + 5;
+        sawBladePos.y = start.y + 3;
 
         start.x += 13.5f;
         start.y += 3.15f;
         setBody(true, "platform3", pf1, start, 0);
-        new Worm((World)this).putOn(getBody("platform3"));
+        new Worm((World) this).putOn(getBody("platform3"));
 
         start.x += 15f;
         setBody(true, "platform4", shape, start, 0);
@@ -77,7 +79,6 @@ public final class Level2 extends Level implements StepListener, CollisionListen
             v.addImage(W3);
         });
 
-        addStepListener(this);
     }
 
     public void spawnSawBlades(boolean spawn) {
@@ -90,17 +91,18 @@ public final class Level2 extends Level implements StepListener, CollisionListen
 
     @Override
     public void preStep(StepEvent e) {
-        //do nothing
+        numSteps++;
+        if (numSteps >= 90) {
+            numSteps = 0;
+            SawBlade sb = new SawBlade((World) this);
+            sb.setPosition(sawBladePos);
+//            new SawBlade((World) this).putOn(sawBladeXPos, getBody("platform2"));
+        }
     }
 
     @Override
     public void postStep(StepEvent e) {
-        numSteps++;
-        if (numSteps % 90 == 0) {
-            numSteps = 0;
-            new SawBlade((World) this).putOn(sawBladeXPos, getBody("platform2"));
-        }
-
+        
     }
 
     @Override
