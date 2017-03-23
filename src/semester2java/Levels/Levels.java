@@ -29,6 +29,7 @@ import org.jbox2d.common.Vec2;
 import semester2java.Bodies.Player;
 import semester2java.Controller.KeyboardHandler;
 import semester2java.Controller.MouseHandler;
+import semester2java.HighScore;
 import semester2java.Levels.Event.ChangeLevelListener;
 import semester2java.Levels.Event.EndGameListener;
 import semester2java.Levels.levels.Level3;
@@ -83,6 +84,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     private final Semester2Java game;
     private JLabel background;
     private JFrame debugView;
+    private HighScore highScore;
 
     public Levels(JLayeredPane layeredPane, int resolutionX, int resolutionY, Semester2Java game) {
         this.layeredPane = layeredPane;
@@ -98,6 +100,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         levelNumber = LevelNumber.LEVEL1;
         background = new JLabel();
         debugView = new DebugViewer(this.level, resolutionX, resolutionY);
+        highScore = new HighScore(layeredPane);
         changeLevel();
     }
 
@@ -210,9 +213,22 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
     public void incrementLevel() {
         //TODO add logic to make sure level is less than total levels in enum
-        levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode() + 1 < 4 ? levelNumber.getCode() + 1 : 1);
-        changeLevel();
+        int levelCount = LevelNumber.lookup.size();
+        if (levelNumber.getCode()< levelCount){
+            levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode()+1);
+            changeLevel();            
+        } else {
+            gameComplete();
+        }
+        
+        
+//        levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode()  < levelCount ? levelNumber.getCode() + 1 : 1);
+//        changeLevel();
     }
+    
+    private void gameComplete(){
+        highScore.finish();
+    }    
 
     public Level getLevel() {
         return level;

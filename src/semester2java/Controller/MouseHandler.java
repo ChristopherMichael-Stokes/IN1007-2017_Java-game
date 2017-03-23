@@ -54,9 +54,6 @@ public class MouseHandler extends MouseAdapter {
         if (world.isRunning()) {
             if (player.getShots() > 0) {
                 Vec2 playerLocation = player.getPosition();
-                Point point = e.getPoint();  //where the mouse cursor is at moment of click
-                int height = view.getHeight();
-                int width = view.getWidth();
 
                 Vec2 mouseLocation = view.viewToWorld(e.getPoint()); //transpose position of mouse relative world
                 Vec2 force = mouseLocation.sub(player.getPosition());   //force to apply to bullet

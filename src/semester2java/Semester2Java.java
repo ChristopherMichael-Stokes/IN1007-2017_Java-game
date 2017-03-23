@@ -4,7 +4,6 @@
  */
 package semester2java;
 
-import city.cs.engine.DebugViewer;
 import city.cs.engine.SimulationSettings;
 import city.cs.engine.UserView;
 import city.cs.engine.World;
