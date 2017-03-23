@@ -93,7 +93,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         level = new Level1();
         level.start();
         view = new UserView(level, resolutionY, resolutionY);
-        player = new Player(level, this);
+        player = new Player((World)level, this);
         mh = new MouseHandler(view, level, player);
         kh = new KeyboardHandler(level, player, layeredPane, this);
         this.game = game;
