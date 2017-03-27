@@ -1,7 +1,3 @@
-/*
- * this class represents the player object, which extends the walker class
- * and has its own image.
- */
 package semester2java.Bodies;
 
 import semester2java.Bodies.AIBodies.Worm;
@@ -26,6 +22,8 @@ import semester2java.Levels.Level;
 import semester2java.Levels.Levels;
 
 /**
+ * the player class is a subtype of walker, and has its own images fields and
+ * methods
  *
  * @author Christopher
  */
@@ -77,6 +75,9 @@ public class Player extends Walker implements CollisionListener {
         healthPanel.setBackground(new Color(0, 0, 0, 0));
     }
 
+    /**
+     * initialize the player fixtures, and add an image
+     */
     private void drawPlayer() {
         //create fixtures to model player and set the correct physical properties
         Shape playerShape = new PolygonShape(-0.065f, 1.007f, -0.653f, 0.744f, -0.889f, 0.303f, -0.489f, -0.689f, -0.014f, -0.826f, 0.544f, -0.651f, 0.885f, 0.316f, 0.632f, 0.774f);
@@ -109,16 +110,29 @@ public class Player extends Walker implements CollisionListener {
         this.addCollisionListener(this);
     }
 
+    /**
+     * remove references to jpanels from this class, to allow a new instance
+     * to be made
+     */
     public void cleanup() {
         levels.getLayeredPane().remove(healthPanel);
         levels.getLayeredPane().remove(projectilePanel);
     }
 
-    // assigners/mutators
+    /**
+     * set the friction coefficient for the input object.
+     * 
+     * @param sf a SolidFixture object
+     */
     private void changeFriction(SolidFixture sf) {
         sf.setFriction(0.9f);
     }
 
+    
+    /**
+     * reduce the current player health by half a heart.  If the health value
+     * is already on half a heart, the player will die
+     */
     public void decrementHalfHeart() {
         for (int i = 0; i < health.length(); i++) {
             //convert each character of health string to an integer
@@ -130,10 +144,10 @@ public class Player extends Walker implements CollisionListener {
                     if (temp == 0) {
                         //fire endgame event as player is on 0 health
                         levels.getLevel().endGame();
-//                        System.out.println("end");
-
                     }
                 } else {
+                    //have to cast health to a string as it is not stored as an
+                    //int
                     health = health.substring(0, i) + temp + health.substring(i + 1);
                 }
                 break;
@@ -141,6 +155,9 @@ public class Player extends Walker implements CollisionListener {
         }
     }
 
+    /**
+     * 
+     */
     public void incrementHalfHeart() {
         for (int i = health.length() - 1; i >= 0; i--) {
             int temp = Integer.parseInt(Character.toString(health.charAt(i)));
@@ -352,7 +369,7 @@ public class Player extends Walker implements CollisionListener {
                     break;
                 case "end":
                     e.getOtherBody().destroy();
-                    Level tempLevel = (Level)getWorld();
+                    Level tempLevel = (Level) getWorld();
                     tempLevel.fireChangeLevelEvent();
 //                    levels.incrementLevel();
                     break;
