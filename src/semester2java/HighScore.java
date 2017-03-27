@@ -57,7 +57,7 @@ public class HighScore {
 //                message = "\""+tempName+"\" is not a valid name.  Choose another name: ";
                 message = defaultMessage;
             }
-        } while (!scores.containsKey(tempName) || tempName.matches("[ ]+"));
+        } while (scores.containsKey(tempName) || tempName.matches("[ ]+"));
 
         return tempName;
     }
