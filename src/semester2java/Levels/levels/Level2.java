@@ -15,6 +15,7 @@ import city.cs.engine.StepListener;
 import city.cs.engine.World;
 import org.jbox2d.common.Vec2;
 import semester2java.Bodies.AIBodies.Worm;
+import semester2java.Bodies.Player;
 import semester2java.Bodies.SawBlade;
 import semester2java.Levels.Level;
 import static semester2java.Levels.Level.getFrictionCoefficient;
@@ -31,6 +32,7 @@ public final class Level2 extends Level implements StepListener, CollisionListen
             = new BodyImage(getTextureLocation(Level.Textures.WOOD_01), 15);
     private int numSteps;
     private final Vec2 sawBladePos;
+    private Player player;
 
     public Level2() {
         super();
@@ -81,28 +83,32 @@ public final class Level2 extends Level implements StepListener, CollisionListen
 
     }
 
-    public void spawnSawBlades(boolean spawn) {
-        if (spawn) {
-            addStepListener(this);
+    public void spawnSawBlades(Player player) {
+        this.player = player;
+        addStepListener(this);
+    }
+
+    public Vec2 getSawBladePos() {
+        return sawBladePos;
+    }
+
+    @Override
+    public void preStep(StepEvent e) {
+        if (!(player.getPosition().sub(sawBladePos).length() < 5)) {
+            numSteps++;
+            if (numSteps >= 90) {
+                numSteps = 0;
+                SawBlade sb = new SawBlade((World) this);
+                sb.setPosition(sawBladePos);
+            }
         } else {
             removeStepListener(this);
         }
     }
 
     @Override
-    public void preStep(StepEvent e) {
-        numSteps++;
-        if (numSteps >= 90) {
-            numSteps = 0;
-            SawBlade sb = new SawBlade((World) this);
-            sb.setPosition(sawBladePos);
-//            new SawBlade((World) this).putOn(sawBladeXPos, getBody("platform2"));
-        }
-    }
-
-    @Override
     public void postStep(StepEvent e) {
-        
+
     }
 
     @Override

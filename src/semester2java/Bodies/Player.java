@@ -12,6 +12,8 @@ import city.cs.engine.World;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -29,25 +31,29 @@ import semester2java.Levels.Levels;
  */
 public class Player extends Walker implements CollisionListener {
 
-    private static final BodyImage image = new BodyImage("data/owl.png", 2);
-    private static final BodyImage jump1 = new BodyImage("data/owlJump1.gif", 2);
-    private static final BodyImage jump2 = new BodyImage("data/owlJump2.gif", 2);
+    private static final BodyImage IMAGE = new BodyImage("data/owl.png", 2);
+    private static final BodyImage JUMP_1 = new BodyImage("data/owlJump1.gif", 2);
+    private static final BodyImage JUMP_2 = new BodyImage("data/owlJump2.gif", 2);
 
-    private static final ImageIcon fH = new ImageIcon(new ImageIcon("data/appleImageFull.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
-    private static final ImageIcon hH = new ImageIcon(new ImageIcon("data/appleImageHalf.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
-    private static final ImageIcon eH = new ImageIcon(new ImageIcon("data/appleImageEmpty.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
+    private static final ImageIcon FH = new ImageIcon(new ImageIcon("data/appleImageFull.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
+    private static final ImageIcon HH = new ImageIcon(new ImageIcon("data/appleImageHalf.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
+    private static final ImageIcon EH = new ImageIcon(new ImageIcon("data/appleImageEmpty.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
 
-    private static final ImageIcon projectileIcon = new ImageIcon(new ImageIcon("data/pumpkinseed.png").getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT));
+    private static final ImageIcon PROJECTILE_ICON = new ImageIcon(new ImageIcon("data/pumpkinseed.png").getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT));
+    private static final BodyImage PROJECTILE_IMAGE = new BodyImage("data/pumpkinseed.png", 2);
     public SolidFixture leftFootFixture, rightFootFixture;
     private int hearts, shots, shotSpeed;
     private String defaultHealth, health;
     private float moveSpeed;
     private Vec2 jump;
     private boolean canJump; //should only evaluate to true when a player is on a surface
-    private Projectile playerProjectile;
     private JPanel healthPanel, projectilePanel;
     private final Levels levels;
     private SolidFixture prevCollision;
+
+    private final List<Projectile> projectiles;
+    private static final Shape PROJECTILE
+            = new PolygonShape(-0.059f, 0.659f, 0.114f, 0.281f, 0.207f, -0.405f, 0.053f, -0.64f, -0.368f, -0.64f, -0.535f, -0.386f, -0.362f, 0.281f, -0.189f, 0.652f);
 
     public Player(World world, Levels levels) {
         super(world);
@@ -73,6 +79,7 @@ public class Player extends Walker implements CollisionListener {
         healthPanel = new JPanel();
         healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.LINE_AXIS));
         healthPanel.setBackground(new Color(0, 0, 0, 0));
+        projectiles = new ArrayList<>();
     }
 
     /**
@@ -105,14 +112,14 @@ public class Player extends Walker implements CollisionListener {
         changeFriction(rightFootFixture);
         rightFootFixture.setRestitution(0.05f);
 
-        addImage(image);
+        addImage(IMAGE);
         this.setName("player");
         this.addCollisionListener(this);
     }
 
     /**
-     * remove references to jpanels from this class, to allow a new instance
-     * to be made
+     * remove references to jpanels from this class, to allow a new instance to
+     * be made
      */
     public void cleanup() {
         levels.getLayeredPane().remove(healthPanel);
@@ -121,17 +128,16 @@ public class Player extends Walker implements CollisionListener {
 
     /**
      * set the friction coefficient for the input object.
-     * 
+     *
      * @param sf a SolidFixture object
      */
     private void changeFriction(SolidFixture sf) {
         sf.setFriction(0.9f);
     }
 
-    
     /**
-     * reduce the current player health by half a heart.  If the health value
-     * is already on half a heart, the player will die
+     * reduce the current player health by half a heart. If the health value is
+     * already on half a heart, the player will die
      */
     public void decrementHalfHeart() {
         for (int i = 0; i < health.length(); i++) {
@@ -158,7 +164,7 @@ public class Player extends Walker implements CollisionListener {
     }
 
     /**
-     * 
+     *
      */
     public void incrementHalfHeart() {
         for (int i = health.length() - 1; i >= 0; i--) {
@@ -210,9 +216,9 @@ public class Player extends Walker implements CollisionListener {
 
     public void drawPlayerHealth() {
         healthPanel.removeAll();
-        JLabel fullHeart = new JLabel(fH);
-        JLabel halfHeart = new JLabel(hH);
-        JLabel emptyHeart = new JLabel(eH);
+        JLabel fullHeart = new JLabel(FH);
+        JLabel halfHeart = new JLabel(HH);
+        JLabel emptyHeart = new JLabel(EH);
 
         JLabel[] heartTypes = new JLabel[]{emptyHeart, halfHeart, fullHeart};
         JLabel[] drawHearts = new JLabel[this.getHearts()];
@@ -225,12 +231,15 @@ public class Player extends Walker implements CollisionListener {
             healthPanel.add(new JLabel(drawHeart.getIcon()));
             healthPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         }
-//        for (JLabel label : drawHearts) {
-//            System.out.println(label);
-//        }
-//        System.out.println("");
-
-//        System.out.println(healthDisplay.getComponentCount());
+    }
+    
+    public void shotWorm(){
+        levels.getHighScore().shotSmallEnemy();
+    }
+    
+    public void shotSawBlade(){
+        levels.getHighScore().shotLargeEnemy();
+        
     }
 
     public int getShots() {
@@ -256,7 +265,7 @@ public class Player extends Walker implements CollisionListener {
     public void drawPlayerShots() {
         projectilePanel.removeAll();
         for (int i = 0; i < shots; i++) {
-            projectilePanel.add(new JLabel(projectileIcon));
+            projectilePanel.add(new JLabel(PROJECTILE_ICON));
         }
     }
 
@@ -291,12 +300,12 @@ public class Player extends Walker implements CollisionListener {
     public void jump() {
         this.applyForce(jump);
         this.removeAllImages();
-        this.addImage(jump1);
+        this.addImage(JUMP_1);
     }
 
     public void jumpDown() {
         this.removeAllImages();
-        this.addImage(jump2);
+        this.addImage(JUMP_2);
     }
 
     public boolean canJump() {
@@ -309,15 +318,45 @@ public class Player extends Walker implements CollisionListener {
 
     public void setDefaultImage() {
         this.removeAllImages();
-        this.addImage(image);
+        this.addImage(IMAGE);
     }
 
-    public void setPlayerProjectile(Projectile playerProjectile) {
-        this.playerProjectile = playerProjectile;
-    }
+    public void shootProjectile(Vec2 mouseLocation) {
 
-    public Projectile getPlayerProjectile() {
-        return playerProjectile;
+        Vec2 playerLocation = getPosition();
+        Vec2 force = mouseLocation.sub(playerLocation);   //force to apply to bullet
+        float magnitude = (float) Math.sqrt(force.x * force.x + force.y * force.y);
+
+        //work out where the bullet starts
+        //starts at a position between the player and the mouse
+        Vec2 bulletStart = playerLocation.add(force.mul(2 / magnitude));
+
+        Vec2 horizontalVector = new Vec2(mouseLocation.x, playerLocation.y);
+        horizontalVector.sub(playerLocation);
+
+        //needed to work out the angle between the mouse and the horizontal
+        //to work out how much to rotate the image
+        float theta = (float) Math.acos(Math.abs(mouseLocation.x - playerLocation.x) / force.length());
+        float pi = (float) Math.PI;
+
+        //shift theta along cosine graph to get correct rotation
+        if (mouseLocation.y < playerLocation.y) {
+            if (mouseLocation.x > playerLocation.x) {
+                theta = pi + theta;
+            } else {
+                theta = 0 - theta;
+            }
+        } else if (mouseLocation.x > playerLocation.x) {
+            theta = pi - theta;
+        }
+
+        Projectile tempProjectile = new Projectile(getWorld(), PROJECTILE, force.mul(getShotSpeed() / magnitude), bulletStart, pi / 2 - theta);
+        tempProjectile.setName("playerProjectile");
+        tempProjectile.addImage(PROJECTILE_IMAGE);
+        decrementShots();
+        tempProjectile.setShootingBody(this);
+        projectiles.add(tempProjectile);
+
     }
 
     //players collision listener
@@ -373,7 +412,6 @@ public class Player extends Walker implements CollisionListener {
                     e.getOtherBody().destroy();
                     Level tempLevel = (Level) getWorld();
                     tempLevel.fireChangeLevelEvent();
-//                    levels.incrementLevel();
                     break;
                 default:
                     //handle this

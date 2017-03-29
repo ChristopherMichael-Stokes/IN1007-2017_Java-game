@@ -31,40 +31,60 @@ public class HighScore {
     private int score;
     private Map<String, Integer> scores, sortedScores;
     private String name;
+    private short frames;
 
     public HighScore() {
+        frames = 0;
         score = 0;
         sortedScores = new LinkedHashMap<>();
         readScoresFromFile();
     }
 
+    public void resetFrames(){
+        this.frames = 0;
+    }
+    
     /**
      * works out player score after they loose a life
      */
     public void deductLife() {
         score -= 200;
     }
-    
+    /**
+     * works out player score after they loose a health point
+     */
     public void deductHealth(){
         score -= 50;
+    }
+    
+    /**
+     * deducts 
+     * @param frameRate the simulation rate the game is running at
+     */
+    public void timePenalty(int frameRate){
+        frames++;
+        if (frames % frameRate == 0){
+            frames = 0;
+            score--;
+        }       
     }
     
     /**
      * works out the player score after they shoot a small enemy
      */
     public void shotSmallEnemy() {
-        score += 20;
+        score += 50;
     }
 
     /**
      * works out the player score after they shoot a large enemy
      */
     public void shotLargeEnemy() {
-        score += 50;
+        score += 100;
     }
     
     public void completedLevel(){
-        score += 100;
+        score += 200;
     }
 
     /**

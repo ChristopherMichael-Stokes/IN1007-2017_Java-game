@@ -86,6 +86,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     private JLabel background;
     private final JFrame debugView;
     private final HighScore highScore;
+    private final long startTime;
 
     public Levels(JLayeredPane layeredPane, int resolutionX, int resolutionY, Semester2Java game) {
         this.layeredPane = layeredPane;
@@ -103,6 +104,8 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         background = new JLabel();
         debugView = new DebugViewer(this.level, resolutionX, resolutionY);
         changeLevel();
+        startTime = System.currentTimeMillis();        
+        double timeElapsed = (System.currentTimeMillis()-startTime)/1000d;
         highScore = new HighScore();
     }
 
@@ -114,15 +117,29 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
                 break;
 
             case LEVEL2:
-                Level2 level2 = new Level2();
+                Level2 level2 = new Level2();                
                 switchLevel(level2);
-                level2.spawnSawBlades(true);
+                level2.spawnSawBlades(player);
+                
+//                Vec2 sawBladePosition = level2.getSawBladePos();                
+//                level2.addStepListener(new StepListener(){
+//                    @Override
+//                    public void postStep(StepEvent e){
+//                        if (player.getPosition().sub(sawBladePosition).length()<5){
+//                            level2.spawnSawBlades(false);
+//                        }
+//                    }
+//                    
+//                    @Override
+//                    public void preStep(StepEvent e) {}
+//                });
+                
                 break;
 
             case LEVEL3:
                 Level3 level3 = new Level3();
                 switchLevel(level3);
-                level3.spawnBarrels();
+                level3.spawnBarrels();                
                 break;
 
             case LEVEL4:
@@ -223,6 +240,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
     public void incrementLevel() {
         //TODO add logic to make sure level is less than total levels in enum
+        highScore.completedLevel();
         int levelCount = LevelNumber.lookup.size();
         if (levelNumber.getCode()< levelCount){
             levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode()+1);
@@ -281,6 +299,8 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
     @Override
     public void preStep(StepEvent e) {
+        highScore.timePenalty(game.getFrameRate());
+//        System.out.println(highScore.getScore());
     }
 
     @Override
