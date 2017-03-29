@@ -7,7 +7,6 @@
 package semester2java.Levels;
 
 import city.cs.engine.DebugViewer;
-import city.cs.engine.DynamicBody;
 import semester2java.Levels.levels.Level2;
 import semester2java.Levels.levels.Level1;
 import city.cs.engine.StepEvent;
@@ -85,7 +84,8 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     private Runnable r1, r2;
     private final Semester2Java game;
     private JLabel background;
-    private JFrame debugView;
+    private final JFrame debugView;
+    private final HighScore highScore;
 
     public Levels(JLayeredPane layeredPane, int resolutionX, int resolutionY, Semester2Java game) {
         this.layeredPane = layeredPane;
@@ -103,10 +103,10 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         background = new JLabel();
         debugView = new DebugViewer(this.level, resolutionX, resolutionY);
         changeLevel();
+        highScore = new HighScore();
     }
 
     public void changeLevel() {
-        Level tempLevel;
         switch (levelNumber) {
             case LEVEL1:
                 Level level1 = new Level1();
@@ -120,11 +120,14 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
                 break;
 
             case LEVEL3:
-                switchLevel(new Level3());
+                Level3 level3 = new Level3();
+                switchLevel(level3);
+                level3.spawnBarrels();
                 break;
 
             case LEVEL4:
-                switchLevel(new Level4());
+                Level4 level4 = new Level4();
+                switchLevel(level4);
                 break;
 
             default:
@@ -238,9 +241,13 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         JPanel scorePanel = new JPanel();
         layeredPane.add(scorePanel);
         scorePanel.setBounds(0,0,resolutionX,resolutionY);
-        new HighScore(scorePanel).finish();
+        highScore.finish(scorePanel);
         
-    }    
+    }   
+    
+    public HighScore getHighScore(){
+        return highScore;
+    }
 
     public Level getLevel() {
         return level;

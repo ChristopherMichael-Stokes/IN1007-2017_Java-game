@@ -31,10 +31,9 @@ public class HighScore {
     private int score;
     private Map<String, Integer> scores, sortedScores;
     private String name;
-    private final JPanel panel;
 
-    public HighScore(JPanel panel) {
-        this.panel = panel;
+    public HighScore() {
+        score = 0;
         sortedScores = new LinkedHashMap<>();
         readScoresFromFile();
     }
@@ -43,9 +42,13 @@ public class HighScore {
      * works out player score after they loose a life
      */
     public void deductLife() {
-        score -= 100;
+        score -= 200;
     }
-
+    
+    public void deductHealth(){
+        score -= 50;
+    }
+    
     /**
      * works out the player score after they shoot a small enemy
      */
@@ -59,14 +62,19 @@ public class HighScore {
     public void shotLargeEnemy() {
         score += 50;
     }
+    
+    public void completedLevel(){
+        score += 100;
+    }
 
     /**
      * asks the user to input a name, then checks that the name does not already
      * exist in the scoring system, and that the name is not blank.
      *
+     * @param panel the panel to display the request
      * @return a validated name inputted by the user
      */
-    private String askForName() {
+    private String askForName(JPanel panel) {
         //needs swing code to ask user to input name
         String tempName = "";
         String defaultMessage = "You must enter a name: ";
@@ -102,9 +110,10 @@ public class HighScore {
 
     /**
      *
+     * @param panel
      */
-    public void finish() {
-        name = askForName();
+    public void finish(JPanel panel) {
+        name = askForName(panel);
         scores.put(name, score);
         sortScores();
         outputScoresToFile();
@@ -131,14 +140,6 @@ public class HighScore {
      */
     public int getScore() {
         return score;
-    }
-
-    /**
-     *
-     * @param score the value to assign to the current score
-     */
-    public void setScore(int score) {
-        this.score = score;
     }
 
     /**

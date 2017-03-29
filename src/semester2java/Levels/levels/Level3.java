@@ -32,12 +32,12 @@ public final class Level3 extends Level implements StepListener {
 
     public Level3() {
         super();
-        stepCount=0;
-        start = new Vec2(0, -11.5f);        
+        stepCount = 0;
+        start = new Vec2(0, -11.5f);
         initializeLevel();
-        
+
         //give random function a seed for debugging purposes
-        rFloat = new Random(50);        
+        rFloat = new Random(50);
     }
 
     @Override
@@ -51,62 +51,61 @@ public final class Level3 extends Level implements StepListener {
         start.y -= 5f;
         Shape shape = new BoxShape(3, 0.5f);
         setBody(true, "start", shape, start, 0);
-        
+
         start.x += 10f;
         start.y += 1f;
         Shape pf1 = new BoxShape(3, 0.5f);
         setBody(true, "platform1", pf1, start, 0);
-        
+
         start.x += 20f;
-        Shape pf2 = new BoxShape(7,0.5f);
+        Shape pf2 = new BoxShape(7, 0.5f);
         setBody(true, "platform2", pf2, start, 0);
-                
+
         start.x += 11f;
         start.y += 7f;
-        Shape pf3 = new BoxShape(7.25f,0.5f);
-        setBody(true, "platform3", pf3, start, pi/2);
-        
+        Shape pf3 = new BoxShape(7.25f, 0.5f);
+        setBody(true, "platform3", pf3, start, pi / 2);
+
         start.x -= 11f;
         start.y -= 1f;
-        Shape pf4 = new BoxShape(3f,0.5f);
+        Shape pf4 = new BoxShape(3f, 0.5f);
         setBody(true, "platform4", pf4, start, 0);
-        
+
         start.x += 9f;
         start.y += 6.15f;
-        setBody(true, "platform5", pf4, start, pi/4);
-        
+        setBody(true, "platform5", pf4, start, pi / 4);
+
         start.x += 11f;
         start.y += 3f;
-        Shape pf6 = new BoxShape(4f,0.5f);
+        Shape pf6 = new BoxShape(4f, 0.5f);
         setBody(true, "platform6", pf6, start, 0);
-        
+
         start.y -= 17f;
         setBody(true, "platform7", pf6, start, 0);
         barrelSpawnXLow = start.x + 4.25f;
 //        getBody("platform7").setName("end");
-        
+
         start.x += 4f;
         start.y += 21f;
-        setBody(true, "platform8", pf6, start, pi/2);
-        
+        setBody(true, "platform8", pf6, start, pi / 2);
+
         start.y -= 23.25f;
         start.x += 3.25f;
-        setBody(true, "platform9", pf6, start, -pi/6);
-        
+        setBody(true, "platform9", pf6, start, -pi / 6);
+
         start.x += 14f;
-        setBody(true, "platform10", pf6, start, pi/6);
-        
+        setBody(true, "platform10", pf6, start, pi / 6);
+
         start.y += 2.25;
         start.x += 7.25f;
         setBody(true, "platform11", pf6, start, 0);
         barrelSpawnHeight = start.y + 17;
         barrelSpawnXHigh = start.x - 4.25f;
-        
+
         start.x += 15f;
         setBody(true, "platform12", pf6, start, 0);
         getBody("platform12").setName("end");
-       
-        
+
         setBackground(Backgrounds.FOREST_BACKGROUND_01);
 
         changeFriction(getFrictionCoefficient(FrictionCoefficient.WOOD));
@@ -114,7 +113,10 @@ public final class Level3 extends Level implements StepListener {
             v.setClipped(true);
             v.addImage(W3);
         });
-        
+
+    }
+
+    public void spawnBarrels() {
         addStepListener(this);
     }
 
@@ -131,10 +133,10 @@ public final class Level3 extends Level implements StepListener {
             // x is position i have, a and b is 0.0 and 1.0
             // d and c are limits for barrel spawnPosition
             // ((x-a)/(b-a) * (d-c))+ c
-            float mappedPosition = (rFloat.nextFloat()*(barrelSpawnXHigh-barrelSpawnXLow))+barrelSpawnXLow;
+            float mappedPosition = (rFloat.nextFloat() * (barrelSpawnXHigh - barrelSpawnXLow)) + barrelSpawnXLow;
             Vec2 spawnPosition = new Vec2(mappedPosition, barrelSpawnHeight);
-            
-            new SpikedBarrel((World)this).setPosition(spawnPosition);
+
+            new SpikedBarrel((World) this).setPosition(spawnPosition);
             //spawn barrel
         }
     }

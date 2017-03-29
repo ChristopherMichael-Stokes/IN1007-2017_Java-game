@@ -21,6 +21,7 @@ import semester2java.Bodies.AIBodies.Worm;
 public class Projectile extends DynamicBody implements CollisionListener {
 
     private String nameOfShootingBody;  //the name of the body that shot this projectile
+    private DynamicBody shootingBody;
 
     public Projectile(World w, Shape shape, Vec2 force, Vec2 start, float angle) {
         super(w, shape);

@@ -141,6 +141,7 @@ public class Player extends Walker implements CollisionListener {
                 temp--;
                 if (i == health.length() - 1) {
                     health = health.substring(0, i) + temp;
+                    levels.getHighScore().deductLife();
                     if (temp == 0) {
                         //fire endgame event as player is on 0 health
                         levels.getLevel().endGame();
@@ -148,6 +149,7 @@ public class Player extends Walker implements CollisionListener {
                 } else {
                     //have to cast health to a string as it is not stored as an
                     //int
+                    levels.getHighScore().deductHealth();
                     health = health.substring(0, i) + temp + health.substring(i + 1);
                 }
                 break;
