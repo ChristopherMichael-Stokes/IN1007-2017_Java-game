@@ -29,28 +29,62 @@ import semester2java.Levels.Event.EndGameListener;
  */
 public abstract class Level extends World {
 
+    /**
+     * map of all the bodies in the level
+     */
     private final Map<String, Body> bodies;
+    /**
+     * map of all the shapes used to make bodies in the level
+     */
     private final Map<String, Shape> shapes;
+    /**
+     * list of all the change level listeners
+     */
     private static List<ChangeLevelListener> _listeners;
+    /**
+     * list of all the end game listeners
+     */
     private static List<EndGameListener> _listenersEndGame;
+    /**
+     * used to store the coefficient of friction to be used for the level
+     * platforms
+     */
     private float mu;
+    /**
+     * current background the level is using
+     */
     private Backgrounds background;
 
-    //all texture paths   
+    /**
+     * enum set of all the textures that can be applied to the ingame platforms
+     */
     public enum Textures {
         CONCRETE_01, CONCRETE_02, CONCRETE_03, METAL_01,
         METAL_02, METAL_03, WOOD_01, WOOD_02, WOOD_03
     }
 
+    /**
+     * enum set of all the friction coefficients that can be used for the level
+     */
     public enum FrictionCoefficient {
         WOOD, CONCRETE, METAL
     }
 
+    /**
+     * enum set of all the possible game backgrounds
+     */
     public enum Backgrounds {
-        FOREST_BACKGROUND_01, FOREST_BACKGROUND_02, FOREST_BACKGROUND_03, 
+        FOREST_BACKGROUND_01, FOREST_BACKGROUND_02, FOREST_BACKGROUND_03,
         SKY_BACKGROUND_01;
     }
 
+    /**
+     * used to get the friction coefficient, to ensure that all the levels use
+     * appropriate values
+     *
+     * @param frictionCoefficient object of type FrictionCoefficient
+     * @return a float value of the friction
+     */
     public static float getFrictionCoefficient(FrictionCoefficient frictionCoefficient) {
         switch (frictionCoefficient) {
             case WOOD:
@@ -64,6 +98,12 @@ public abstract class Level extends World {
         }
     }
 
+    /**
+     * used to find the path to the texture
+     *
+     * @param textures an object of type Textures
+     * @return the path to the requested texture
+     */
     public static String getTextureLocation(Textures textures) {
 
         switch (textures) {
@@ -90,6 +130,13 @@ public abstract class Level extends World {
         }
     }
 
+    /**
+     * used to find the file that corresponds to each background. The background
+     * is added to the view in the levels class
+     *
+     * @param background an object of type Backgrounds
+     * @return the image that corresponds to the given background
+     */
     public File chooseBackground(Backgrounds background) {
         switch (background) {
             case FOREST_BACKGROUND_01:
@@ -98,7 +145,7 @@ public abstract class Level extends World {
                 return new File("data/forestBackground03.jpeg");
             case FOREST_BACKGROUND_03:
                 return new File("data/forestBackground02.png");
-            case SKY_BACKGROUND_01: 
+            case SKY_BACKGROUND_01:
                 return new File("data/skyBackground01.png");
             default:
                 return null;
@@ -106,6 +153,9 @@ public abstract class Level extends World {
 
     }
 
+    /**
+     * initialize bodies, shapes, change level listeners and end game listeners.
+     */
     public Level() {
         shapes = new HashMap<>();
         bodies = new HashMap<>();
@@ -114,17 +164,39 @@ public abstract class Level extends World {
         this.stop();
     }
 
+    /**
+     * unique to each implementation of this class
+     */
     protected abstract void initializeLevel();
 
+    /**
+     * level is a subtype of world, so it can pass itself as a world object
+     *
+     * @return the current world object
+     */
     public World getWorld() {
         return this;
     }
 
+    /**
+     *
+     * @return the map of all bodies in the level
+     */
     public Map<String, Body> getBodies() {
         return bodies;
     }
 
-    public void setBody(boolean isStatic, String bodyName, Shape shape, Vec2 position, float angle) {
+    /**
+     * called from implementations of this object, and is used to place a new
+     * body in the level, i.e. a platform
+     *
+     * @param isStatic is the body static or dynamic, respectively true or false
+     * @param bodyName name to assign to the body
+     * @param shape the shape of the body
+     * @param position the vector where the body is to be placed
+     * @param angle the angle at which to incline the body
+     */
+    protected void setBody(boolean isStatic, String bodyName, Shape shape, Vec2 position, float angle) {
         //initialize bodies in a level
         if (isStatic) {
             setStaticBodies(bodyName, shape);
@@ -135,35 +207,76 @@ public abstract class Level extends World {
         getBody(bodyName).setAngle(angle);
     }
 
+    /**
+     * search for a body object in map bodies
+     *
+     * @param key the body to look for
+     * @return a body object from the current level
+     */
     public Body getBody(String key) {
         return bodies.get(key);
     }
 
+    /**
+     * search for a shape object in map shapes
+     *
+     * @param key the shape to look for
+     * @return a shape object from the current level
+     */
     public Shape getShape(String key) {
         return shapes.get(key);
     }
 
-    public void setStaticBodies(String key, Shape shape) {
+    /**
+     * only called by this class, and is used to place static bodies, and their
+     * shapes into the maps bodies and shapes.
+     *
+     * @param key the unique value assigned to the body
+     * @param shape the shape to be placed in the map
+     */
+    private void setStaticBodies(String key, Shape shape) {
         shapes.put(key, shape);
         Body sb = new StaticBody(this, shape);
         bodies.put(key, sb);
     }
 
-    public void setDynamicBodies(String key, Shape shape) {
+    /**
+     * only called by this class, and is used to place dynamic bodies, and their
+     * shapes into the maps bodies and shapes.
+     *
+     * @param key the unique value assigned to the body
+     * @param shape the shape to be placed in the map
+     */
+    private void setDynamicBodies(String key, Shape shape) {
         shapes.put(key, shape);
         Body sb = new DynamicBody(this, shape);
         bodies.put(key, sb);
     }
 
-    public void setBackground(Backgrounds background) {
+    /**
+     * allow implementations of the class to assign a background
+     *
+     * @param background the Backgrounds object to be set as the background
+     */
+    protected void setBackground(Backgrounds background) {
         this.background = background;
     }
 
+    /**
+     * finds the current background
+     *
+     * @return the background file for the current level
+     */
     public File getBackground() {
         return chooseBackground(background);
     }
 
-    public void changeFriction(float mu) {
+    /**
+     * set the friction for all static bodies in the level
+     *
+     * @param mu the coefficient of friction
+     */
+    protected void changeFriction(float mu) {
         //change friction for all bodies
         bodies.forEach((k, v) -> {
             this.mu = mu;
@@ -174,14 +287,28 @@ public abstract class Level extends World {
         });
     }
 
+    /**
+     * add a new change level listener object to the list of listeners
+     *
+     * @param listener a new change level listener object
+     */
     public synchronized void addChangeLevelListener(ChangeLevelListener listener) {
         _listeners.add(listener);
     }
 
+    /**
+     * remove a change level listener object from the list of listeners
+     *
+     * @param listener an existing change level listener object
+     */
     public synchronized void removeChangeLevelListener(ChangeLevelListener listener) {
         _listeners.remove(listener);
     }
 
+    /**
+     * fires a change level event, which will be read by a change level
+     * listener.
+     */
     public void fireChangeLevelEvent() {
         //create new event to allow the main class to create a new step listener
         ChangeLevelEvent event = new ChangeLevelEvent(this);
@@ -191,14 +318,27 @@ public abstract class Level extends World {
         }
     }
 
+    /**
+     * add a new end game listener object to the list of listeners
+     * 
+     * @param listener a new end game listener object
+     */
     public synchronized void addEndGameListener(EndGameListener listener) {
         _listenersEndGame.add(listener);
     }
 
+    /**
+     * remove an end game listener object from the list of listeners
+     * 
+     * @param listener an existing end game listener object
+     */
     public synchronized void removeEndGameListener(EndGameListener listener) {
         _listenersEndGame.remove(listener);
     }
 
+    /**
+     * fires an end game event, which will be read by an endgame listener
+     */
     public synchronized void endGame() {
         EndGameEvent event = new EndGameEvent(this);
         Iterator listeners = _listenersEndGame.iterator();
