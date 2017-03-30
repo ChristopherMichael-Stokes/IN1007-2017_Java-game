@@ -28,11 +28,27 @@ import javax.swing.JTextArea;
 @SuppressWarnings("unchecked")
 public class HighScore {
 
+    /**
+     * the current score for the game
+     */
     private int score;
+    /**
+     * map of previous scores
+     */
     private Map<String, Integer> scores, sortedScores;
+    /**
+     * the name of the player
+     */
     private String name;
+    /**
+     * the amount of frames that has been run
+     */
     private short frames;
 
+    /**
+     * constructs high scores, and attempts to read the previous scores from a 
+     * file
+     */
     public HighScore() {
         frames = 0;
         score = 0;
@@ -129,8 +145,10 @@ public class HighScore {
     }
 
     /**
-     *
-     * @param panel
+     * Should be called when the game is over.
+     * Will call askForName(), and will display the consolidated list of scores
+     * 
+     * @param panel the panel in which to display the scores
      */
     public void finish(JPanel panel) {
         name = askForName(panel);
@@ -155,7 +173,8 @@ public class HighScore {
     }
 
     /**
-     *
+     * gets the current score
+     * 
      * @return the current score
      */
     public int getScore() {
@@ -163,7 +182,8 @@ public class HighScore {
     }
 
     /**
-     *
+     * gets the sorted map of scores
+     * 
      * @return the map that has scores sorted in descending order
      */
     public Map getSortedScores() {
