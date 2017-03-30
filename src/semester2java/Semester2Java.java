@@ -74,10 +74,6 @@ public class Semester2Java extends SimulationSettings implements Runnable {
         kh = levels.getKeyboardHandler();
     }
 
-    public JFrame getFrame() {
-        return frame;
-    }
-
     /**
      * when this is called, the frame will be setup, and all the parts of the 
      * gui will be added to the frame.
