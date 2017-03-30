@@ -48,6 +48,8 @@ public class KeyboardHandler implements KeyListener, ActionListener {
     private final JLayeredPane layeredPane;
     //player bound keys
     private Map<String, Integer> keyBinds;
+    private boolean rebindingKey;
+    private Map<String, JFormattedTextField> textFields;
 
     public KeyboardHandler(World world, Player player, JLayeredPane layeredPane, Levels levels) {
         this.world = world;
@@ -96,7 +98,8 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         this.world = world;
     }
 
-    private void rk() {
+    private void rebindKey() {
+        rebindingKey = true;
         layeredPane.moveToBack(pauseBackground);
         pauseBackground.remove(rebindKey);
         pauseBackground.remove(level1);
@@ -122,7 +125,6 @@ public class KeyboardHandler implements KeyListener, ActionListener {
             } else {
                 keyValue = Character.getName(entry.getValue());
             }
-
             textField.setValue(keyValue);
             textField.setColumns(5);
             gBC.fill = GridBagConstraints.VERTICAL;
@@ -307,9 +309,12 @@ public class KeyboardHandler implements KeyListener, ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource().equals(play)) {
+            if (rebindingKey){
+                rebindingKey = false;
+            }
             unPause();
         } else if (e.getSource().equals(rebindKey)) {
-            rk();
+            rebindKey();
         } else if (e.getSource().equals(level1)){
             levels.setLevel(Levels.LevelNumber.LEVEL1);
         } else if (e.getSource().equals(level2)){
