@@ -31,30 +31,57 @@ import semester2java.Levels.Levels;
  */
 public class Player extends Walker implements CollisionListener {
 
+    /** a static image to show when the player is standing still */
     private static final BodyImage IMAGE = new BodyImage("data/owl.png", 2);
+    /** a static image to show when the player is jumping */
     private static final BodyImage JUMP_1 = new BodyImage("data/owlJump1.gif", 2);
+    /** a static image to show when the player is falling */
     private static final BodyImage JUMP_2 = new BodyImage("data/owlJump2.gif", 2);
 
+    /** a static image to represent a full heart */
     private static final ImageIcon FH = new ImageIcon(new ImageIcon("data/appleImageFull.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
+    /** a static image to represent a half heart */
     private static final ImageIcon HH = new ImageIcon(new ImageIcon("data/appleImageHalf.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
+   /** a static image to represent an empty heart */
     private static final ImageIcon EH = new ImageIcon(new ImageIcon("data/appleImageEmpty.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
 
+    /** a scaled image to represent a projectile in the projectile panel */
     private static final ImageIcon PROJECTILE_ICON = new ImageIcon(new ImageIcon("data/pumpkinseed.png").getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT));
+    /** a static image to represent a projectile shot from the player */
     private static final BodyImage PROJECTILE_IMAGE = new BodyImage("data/pumpkinseed.png", 2);
+    
+    /** player fixtures */
     public SolidFixture leftFootFixture, rightFootFixture;
+    /** attribute relevant to player stats */
     private int hearts, shots, shotSpeed;
+    /** attribute to show the health of the player */
     private String defaultHealth, health;
+    /** the moving speed of the player */
     private float moveSpeed;
+    /** the force of a jump from the player */
     private Vec2 jump;
-    private boolean canJump; //should only evaluate to true when a player is on a surface
+    /** show if a player has the ability to jump */
+    private boolean canJump;
+    /** swing panel to show player attributes to the player*/
     private JPanel healthPanel, projectilePanel;
+    /** levels object that the player has been instantiated in */
     private final Levels levels;
+    /** the fixture that the player last collided with */
     private SolidFixture prevCollision;
 
+    /** list of all projectiles shot from the player */
     private final List<Projectile> projectiles;
+    /** shape of the projectile to be shot from the player */
     private static final Shape PROJECTILE
             = new PolygonShape(-0.059f, 0.659f, 0.114f, 0.281f, 0.207f, -0.405f, 0.053f, -0.64f, -0.368f, -0.64f, -0.535f, -0.386f, -0.362f, 0.281f, -0.189f, 0.652f);
 
+    /**
+     * this will initialize the player to have three hearts, and initialize 
+     * all the panels
+     * 
+     * @param world the world the player is in
+     * @param levels the levels object that the world is in
+     */
     public Player(World world, Levels levels) {
         super(world);
         this.levels = levels;
@@ -164,7 +191,7 @@ public class Player extends Walker implements CollisionListener {
     }
 
     /**
-     *
+     * will add a half a heart to the players current heart value
      */
     public void incrementHalfHeart() {
         for (int i = health.length() - 1; i >= 0; i--) {
@@ -185,6 +212,11 @@ public class Player extends Walker implements CollisionListener {
 
     }
 
+    /**
+     * 
+     * 
+     * @param hearts the hearts amount to set to
+     */
     public void setHearts(int hearts) {
         this.hearts = hearts;
     }

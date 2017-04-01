@@ -8,7 +8,6 @@ import city.cs.engine.SimulationSettings;
 import city.cs.engine.UserView;
 import city.cs.engine.World;
 import java.awt.Dimension;
-import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
@@ -16,7 +15,10 @@ import semester2java.Controller.KeyboardHandler;
 import semester2java.Levels.Levels;
 
 /**
- *
+ * the game class itself.
+ * Implements the runnable interface so multiple game objects can be run 
+ * simultaneously
+ * 
  * @author chris
  */
 public class Semester2Java extends SimulationSettings implements Runnable {

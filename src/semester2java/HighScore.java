@@ -151,10 +151,14 @@ public class HighScore {
      * @param panel the panel in which to display the scores
      */
     public void finish(JPanel panel) {
+        
         name = askForName(panel);
         scores.put(name, score);
+        sortedScores = new LinkedHashMap<>();
         sortScores();
         outputScoresToFile();
+        
+        
 
         StringBuilder sb = new StringBuilder();
         sb.append("Name:\t\tScore:\n");
