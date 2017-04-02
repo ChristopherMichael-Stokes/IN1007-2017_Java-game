@@ -31,54 +31,92 @@ import semester2java.Levels.Levels;
  */
 public class Player extends Walker implements CollisionListener {
 
-    /** a static image to show when the player is standing still */
+    /**
+     * a static image to show when the player is standing still
+     */
     private static final BodyImage IMAGE = new BodyImage("data/owl.png", 2);
-    /** a static image to show when the player is jumping */
+    /**
+     * a static image to show when the player is jumping
+     */
     private static final BodyImage JUMP_1 = new BodyImage("data/owlJump1.gif", 2);
-    /** a static image to show when the player is falling */
+    /**
+     * a static image to show when the player is falling
+     */
     private static final BodyImage JUMP_2 = new BodyImage("data/owlJump2.gif", 2);
 
-    /** a static image to represent a full heart */
+    /**
+     * a static image to represent a full heart
+     */
     private static final ImageIcon FH = new ImageIcon(new ImageIcon("data/appleImageFull.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
-    /** a static image to represent a half heart */
+    /**
+     * a static image to represent a half heart
+     */
     private static final ImageIcon HH = new ImageIcon(new ImageIcon("data/appleImageHalf.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
-   /** a static image to represent an empty heart */
+    /**
+     * a static image to represent an empty heart
+     */
     private static final ImageIcon EH = new ImageIcon(new ImageIcon("data/appleImageEmpty.png").getImage().getScaledInstance(40, 40, Image.SCALE_DEFAULT));
 
-    /** a scaled image to represent a projectile in the projectile panel */
+    /**
+     * a scaled image to represent a projectile in the projectile panel
+     */
     private static final ImageIcon PROJECTILE_ICON = new ImageIcon(new ImageIcon("data/pumpkinseed.png").getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT));
-    /** a static image to represent a projectile shot from the player */
+    /**
+     * a static image to represent a projectile shot from the player
+     */
     private static final BodyImage PROJECTILE_IMAGE = new BodyImage("data/pumpkinseed.png", 2);
-    
-    /** player fixtures */
+
+    /**
+     * player fixtures
+     */
     public SolidFixture leftFootFixture, rightFootFixture;
-    /** attribute relevant to player stats */
+    /**
+     * attribute relevant to player stats
+     */
     private int hearts, shots, shotSpeed;
-    /** attribute to show the health of the player */
+    /**
+     * attribute to show the health of the player
+     */
     private String defaultHealth, health;
-    /** the moving speed of the player */
+    /**
+     * the moving speed of the player
+     */
     private float moveSpeed;
-    /** the force of a jump from the player */
+    /**
+     * the force of a jump from the player
+     */
     private Vec2 jump;
-    /** show if a player has the ability to jump */
+    /**
+     * show if a player has the ability to jump
+     */
     private boolean canJump;
-    /** swing panel to show player attributes to the player*/
+    /**
+     * swing panel to show player attributes to the player
+     */
     private JPanel healthPanel, projectilePanel;
-    /** levels object that the player has been instantiated in */
+    /**
+     * levels object that the player has been instantiated in
+     */
     private final Levels levels;
-    /** the fixture that the player last collided with */
+    /**
+     * the fixture that the player last collided with
+     */
     private SolidFixture prevCollision;
 
-    /** list of all projectiles shot from the player */
+    /**
+     * list of all projectiles shot from the player
+     */
     private final List<Projectile> projectiles;
-    /** shape of the projectile to be shot from the player */
+    /**
+     * shape of the projectile to be shot from the player
+     */
     private static final Shape PROJECTILE
             = new PolygonShape(-0.059f, 0.659f, 0.114f, 0.281f, 0.207f, -0.405f, 0.053f, -0.64f, -0.368f, -0.64f, -0.535f, -0.386f, -0.362f, 0.281f, -0.189f, 0.652f);
 
     /**
-     * this will initialize the player to have three hearts, and initialize 
-     * all the panels
-     * 
+     * this will initialize the player to have three hearts, and initialize all
+     * the panels
+     *
      * @param world the world the player is in
      * @param levels the levels object that the world is in
      */
@@ -213,39 +251,75 @@ public class Player extends Walker implements CollisionListener {
     }
 
     /**
-     * 
-     * 
+     * sets the amount of hearts of the player
+     *
      * @param hearts the hearts amount to set to
      */
     public void setHearts(int hearts) {
         this.hearts = hearts;
     }
 
+    /**
+     * get the amount of player hearts
+     *
+     * @return the amount of hearts the player has
+     */
     public int getHearts() {
         return hearts;
     }
 
+    /**
+     * get the explicit value of the default player health
+     *
+     * @return the player's default health
+     */
     public String getDefaultHealth() {
         return defaultHealth;
     }
 
+    /**
+     * get the explicit value of the default player health
+     *
+     * @return the players health
+     */
     public String getHealth() {
         return health;
     }
 
+    /**
+     * the length of the input should be the same length as player hearts. The
+     * input should also show the heart value at each position, meaning it will
+     * look something like this: "221". This input shows full heart, full heart
+     * and half heart.
+     *
+     * @param health the value to set the health to.
+     */
     public void setHealth(String health) {
         this.health = health;
     }
 
+    /**
+     * set the JPanel that is used for the player
+     *
+     * @param healthPanel the panel to use for the player
+     */
     public void setHealthPanel(JPanel healthPanel) {
         this.healthPanel = healthPanel;
-
     }
 
+    /**
+     * get the JPanel object that is being used as the players healthPanel
+     *
+     * @return the players healthPanel
+     */
     public JPanel getHealthPanel() {
         return healthPanel;
     }
 
+    /**
+     * draws the correct combinations of half, empty and full hearts on the
+     * JPanel component
+     */
     public void drawPlayerHealth() {
         healthPanel.removeAll();
         JLabel fullHeart = new JLabel(FH);
@@ -256,44 +330,73 @@ public class Player extends Walker implements CollisionListener {
         JLabel[] drawHearts = new JLabel[this.getHearts()];
         for (int i = 0; i < this.getHearts(); i++) {
             //place the correct label at each position of the array
-            drawHearts[(this.getHearts() - 1) - i] = heartTypes[Integer.parseInt(this.health.substring(i, i + 1))];
+            drawHearts[(this.getHearts() - 1) - i]
+                    = heartTypes[Integer.parseInt(this.health.substring(i, i + 1))];
         }
 
         for (JLabel drawHeart : drawHearts) {
             healthPanel.add(new JLabel(drawHeart.getIcon()));
+            //add gap between hearts
             healthPanel.add(Box.createRigidArea(new Dimension(10, 0)));
         }
     }
-    
-    public void shotWorm(){
+
+    /**
+     * works out the high score when the player shoots a small enemy
+     */
+    public void shotWorm() {
         levels.getHighScore().shotSmallEnemy();
     }
-    
-    public void shotSawBlade(){
+
+    /**
+     * works out the high score when the player shoots a small enemy
+     */
+    public void shotSawBlade() {
         levels.getHighScore().shotLargeEnemy();
-        
     }
 
+    /**
+     * get the shots of the player
+     * @return the amount of shots the player has
+     */
     public int getShots() {
         return shots;
     }
 
+    /**
+     * decrease the amount of shots by 1
+     */
     public void decrementShots() {
         shots--;
     }
 
+    /**
+     * gets the magnitude of the players shot speed
+     * @return the shot speed of the player
+     */
     public int getShotSpeed() {
         return shotSpeed;
     }
 
+    /**
+     * set the speed of the players shots
+     * @param shotSpeed the value to assign to shotSpeed
+     */
     public void setShotSpeed(int shotSpeed) {
         this.shotSpeed = shotSpeed;
     }
 
+    /**
+     * gets the panel used to display the players shots
+     * @return JPanel object that is used for projectilePanel
+     */
     public JPanel getProjectilePanel() {
         return projectilePanel;
     }
 
+    /**
+     * adds the correct amount of icons to the projectilePanel
+     */
     public void drawPlayerShots() {
         projectilePanel.removeAll();
         for (int i = 0; i < shots; i++) {
@@ -301,58 +404,109 @@ public class Player extends Walker implements CollisionListener {
         }
     }
 
+    /**
+     * assigns a new move speed
+     * @param moveSpeed the value to assign to the players move speed
+     */
     public void setMoveSpeed(float moveSpeed) {
         this.moveSpeed = moveSpeed;
     }
 
+    /**
+     * get the speed that the player is will use when walking
+     * @return the players move speed 
+     */
     public float getMoveSpeed() {
         return moveSpeed;
     }
 
+    /**
+     * make the player start moving to the left
+     */
     public void moveLeft() {
         this.startWalking(-moveSpeed);
     }
 
+    /**
+     * make the player start moving to the right
+     */
     public void moveRight() {
         this.startWalking(moveSpeed);
     }
 
+    /**
+     * make the player stop walking
+     */
     public void setStopWalking() {
         this.stopWalking();
     }
 
+    /**
+     * sets the jump height of the player
+     *
+     * @param jumpHeight the jump height to use (scale is grid units of the
+     * view)
+     */
     public void setJumpHeight(float jumpHeight) {
         jump = new Vec2(jump.x, jumpHeight);
     }
 
+    /**
+     * get the players jump height
+     * @return the height of the players jump
+     */
     public float getJumpHeight() {
         return jump.y;
     }
 
+    /**
+     * set animations to show when the player is rising from a jump
+     */
     public void jump() {
         this.applyForce(jump);
         this.removeAllImages();
         this.addImage(JUMP_1);
     }
 
+    /**
+     * set animations to show when the player is falling from a jump
+     */
     public void jumpDown() {
         this.removeAllImages();
         this.addImage(JUMP_2);
     }
 
+    /**
+     * see if the player can jump
+     * @return true if the player can jump
+     */
     public boolean canJump() {
         return canJump;
     }
 
+    /**
+     * set whether the player can jump
+     * @param canJump true if the player has the ability to jump
+     */
     public void setCanJump(boolean canJump) {
         this.canJump = canJump;
     }
 
+    /**
+     * sets the default image of the player
+     */
     public void setDefaultImage() {
         this.removeAllImages();
         this.addImage(IMAGE);
     }
 
+    /**
+     * calculates the angle between the horizontal plane and the mouse position.
+     * the angle is then shifted along the cosine plane to produce a vector in
+     * that direction.  A projectile is then instantiated, and added to a list
+     * of projectiles shot from the player.
+     * @param mouseLocation the location of the mouse on the world
+     */
     public void shootProjectile(Vec2 mouseLocation) {
 
         Vec2 playerLocation = getPosition();
@@ -391,7 +545,11 @@ public class Player extends Walker implements CollisionListener {
 
     }
 
-    //players collision listener
+    /**
+     * works out what to do when there is a collision between the player and 
+     * another body.
+     * @param e a collision event; is raised when a body collides with the player
+     */
     @Override
     public void collide(CollisionEvent e) {
         //player should only be able to be able to jump when its feet is on a
