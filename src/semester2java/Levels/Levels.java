@@ -35,7 +35,6 @@ import semester2java.Levels.Event.ChangeLevelListener;
 import semester2java.Levels.Event.EndGameListener;
 import semester2java.Levels.levels.Level3;
 import semester2java.Levels.levels.Level4;
-import semester2java.Semester2Java;
 
 /**
  *

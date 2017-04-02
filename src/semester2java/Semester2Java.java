@@ -92,9 +92,11 @@ public class Semester2Java extends SimulationSettings implements Runnable {
 
         layeredPane.setOpaque(false);
         layeredPane.setPreferredSize(new Dimension(resolutionX, resolutionY));
-
-        levels.setView(view);
+        
         view.setCentre(levels.getPlayer().getPosition());
+        view.setBounds(0,0,resolutionX,resolutionY);
+        levels.setView(view);
+       
         // uncomment this to draw a 1-metre grid over the view
 //        view.setGridResolution(1);
 
@@ -130,6 +132,7 @@ public class Semester2Java extends SimulationSettings implements Runnable {
     public static void main(String[] args) throws InterruptedException {
         Thread t1 = new Thread((new Semester2Java(1024, 768, 60)));
         t1.start();
+        
         //System.out.println(game.getFpsAverageCount());
         //System.out.println(Thread.currentThread().getName());
     }
