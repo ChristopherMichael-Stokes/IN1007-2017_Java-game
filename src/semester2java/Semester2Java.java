@@ -26,7 +26,7 @@ public class Semester2Java extends SimulationSettings implements Runnable {
     /**
      * the pane that all the panels in the game will be added to
      */
-    public JLayeredPane layeredPane;
+    private JLayeredPane layeredPane;
     /* the world that the game initializes to */
     private World world;
     /**
@@ -68,14 +68,31 @@ public class Semester2Java extends SimulationSettings implements Runnable {
         this.resolutionY = resolutionY;
         // display the view in a frame
         frame = new JFrame("semester2game");
+        frame.setSize(resolutionX,resolutionY);
         layeredPane = new JLayeredPane();
         levels = new Levels(layeredPane, resolutionX, resolutionY, frame, fps);
         this.world = levels.getLevel();
         health = levels.getPlayer().getHealthPanel();
         view = levels.getView();
         kh = levels.getKeyboardHandler();
+        
+        frame.setFocusable(true);
+        // quit the application when the game window is closed
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationByPlatform(true);
+        frame.setAutoRequestFocus(true);
+        // don't let the game window be resized
+        frame.setResizable(false);
     }
 
+    /**
+     * get the frame
+     * @return the game window
+     */
+    public JFrame getFrame(){
+        return frame;
+    }
+    
     /**
      * when this is called, the frame will be setup, and all the parts of the 
      * gui will be added to the frame.
@@ -83,12 +100,7 @@ public class Semester2Java extends SimulationSettings implements Runnable {
      */
     @Override
     public void run() {
-        frame.setFocusable(true);
-
-        // quit the application when the game window is closed
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationByPlatform(true);
-        frame.setAutoRequestFocus(true);
+        
 
         layeredPane.setOpaque(false);
         layeredPane.setPreferredSize(new Dimension(resolutionX, resolutionY));
@@ -114,9 +126,7 @@ public class Semester2Java extends SimulationSettings implements Runnable {
         layeredPane.add(view, 1);
 
         frame.addKeyListener(kh);
-        frame.add(layeredPane);
-        // don't let the game window be resized
-        frame.setResizable(false);
+        frame.add(layeredPane);        
         // size the game window to fit the world view
         frame.pack();
         // make the window visible
@@ -130,7 +140,13 @@ public class Semester2Java extends SimulationSettings implements Runnable {
      * @throws InterruptedException 
      */
     public static void main(String[] args) throws InterruptedException {
-        Thread t1 = new Thread((new Semester2Java(1024, 768, 60)));
+        int horizontal = 1024, vertical = 768;
+        
+        Semester2Java game = new Semester2Java(horizontal, vertical, 60);
+        Thread t1 = new Thread(game);
+        
+        PreGame pg = new PreGame(game.getFrame(),horizontal,vertical);
+                
         t1.start();
         
         //System.out.println(game.getFpsAverageCount());

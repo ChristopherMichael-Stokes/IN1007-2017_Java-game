@@ -115,7 +115,6 @@ public class HighScore {
      * @return a validated name inputted by the user
      */
     private String askForName(JPanel panel) {
-        //needs swing code to ask user to input name
         String tempName = "";
         String defaultMessage = "You must enter a name: ";
         String message = defaultMessage;
@@ -162,18 +161,7 @@ public class HighScore {
         sortScores();
         outputScoresToFile();
 
-//        StringBuilder sb = new StringBuilder();
-//        sb.append("Name:\t\tScore:\n");
-//        System.out.println("");
-//        int i = 0;
-//        for (Map.Entry<String, Integer> entry : sortedScores.entrySet()) {
-//            sb.append(entry.getKey()).append("\t\t")
-//                    .append(entry.getValue()).append("\n");
-//            if (i++ > 20) {
-//                break;
-//            }
-//        }
-//        System.out.println("");
+        
         final int numRows = 20;
         int i = 0;
         int indexOfPlayerScore = 0;
@@ -185,8 +173,10 @@ public class HighScore {
             if (entry.getKey().equals(name)) {
                 indexOfPlayerScore = i;
             }
+            
             data[i][0] = entry.getKey();
             data[i][1] = entry.getValue();
+            
             if (++i >= numRows) {
                 //will only show the top 20 scores
                 break;

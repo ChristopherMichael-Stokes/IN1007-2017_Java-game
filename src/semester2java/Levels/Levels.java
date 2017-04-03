@@ -1,9 +1,3 @@
-/*
- * The Levels object is a collection of objects type Level.  This is 
- * where the levels are managed, and where the certain body objects  (such
- * as Player) are passed through to the levels
- *
- */
 package semester2java.Levels;
 
 import city.cs.engine.DebugViewer;
@@ -37,12 +31,15 @@ import semester2java.Levels.levels.Level3;
 import semester2java.Levels.levels.Level4;
 
 /**
+ * The Levels object is a collection of objects type Level. This is where the
+ * levels are managed, and where the certain body objects (such as Player) are
+ * passed through to the levels
  *
  * @author Christopher
  */
 public final class Levels implements ChangeLevelListener, StepListener, EndGameListener {
 
-    /** 
+    /**
      * enum set of the possible levels
      */
     public enum LevelNumber {
@@ -53,6 +50,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
          */
         private static final Map<Integer, LevelNumber> lookup
                 = new HashMap<>();
+
         /**
          * populate the map immediately
          */
@@ -67,9 +65,9 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
          */
         private final int code;
 
-        /** 
+        /**
          * assign a code for the level
-         * 
+         *
          * @param code int value to assign the the object
          */
         private LevelNumber(int code) {
@@ -78,7 +76,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
         /**
          * finds the integer representation of the level type
-         * 
+         *
          * @return integer representation of level type
          */
         public int getCode() {
@@ -86,7 +84,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         }
 
         /**
-         * 
+         *
          * @param code unique value for each level type
          * @return its integer representation
          */
@@ -153,10 +151,10 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     private final long startTime;
 
     /**
-     * constructs the levels object, and calls the methods to set the current 
+     * constructs the levels object, and calls the methods to set the current
      * level to level 1
-     * 
-     * @param layeredPane the swing object that contains all other panes in the 
+     *
+     * @param layeredPane the swing object that contains all other panes in the
      * game
      * @param resolutionX the horizontal resolution of the game window
      * @param resolutionY the vertical resolution of the game window
@@ -169,8 +167,8 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         this.resolutionY = resolutionY;
         level = new Level1();
         view = new UserView(level, resolutionY, resolutionY);
-        player = new Player((World)level, this);
-        
+        player = new Player((World) level, this);
+
         level.start();
         mh = new MouseHandler(view, level, player);
         kh = new KeyboardHandler(level, player, layeredPane, this);
@@ -180,13 +178,13 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         background = new JLabel();
         debugView = new DebugViewer(this.level, resolutionX, resolutionY);
         changeLevel();
-        startTime = System.currentTimeMillis();        
-        double timeElapsed = (System.currentTimeMillis()-startTime)/1000d;
+        startTime = System.currentTimeMillis();
+        double timeElapsed = (System.currentTimeMillis() - startTime) / 1000d;
         highScore = new HighScore();
     }
 
     /**
-     * the action to be called to set the level to the level whose integer 
+     * the action to be called to set the level to the level whose integer
      * representation corresponds to levelNumber
      */
     public void changeLevel() {
@@ -197,10 +195,10 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
                 break;
 
             case LEVEL2:
-                Level2 level2 = new Level2();                
+                Level2 level2 = new Level2();
                 switchLevel(level2);
                 level2.spawnSawBlades(player);
-                
+
 //                Vec2 sawBladePosition = level2.getSawBladePos();                
 //                level2.addStepListener(new StepListener(){
 //                    @Override
@@ -213,13 +211,12 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 //                    @Override
 //                    public void preStep(StepEvent e) {}
 //                });
-                
                 break;
 
             case LEVEL3:
                 Level3 level3 = new Level3();
                 switchLevel(level3);
-                level3.spawnBarrels();                
+                level3.spawnBarrels();
                 break;
 
             case LEVEL4:
@@ -234,7 +231,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     }
 
     /**
-     * 
+     * this will load the next level and remove the old one
      * @param level the level to switch to
      */
     private void switchLevel(Level level) {
@@ -248,12 +245,12 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     }
 
     /**
-     * finalizes the current level by removing all the listeners, then 
+     * finalizes the current level by removing all the listeners, then
      * initializing the next level.
-     * 
+     *
      * Also calls the player object to be initialized
-     * 
-     * @param level the level to switch to 
+     *
+     * @param level the level to switch to
      */
     private void nextLevel(Level level) {
         //uncomment to show debug viewer
@@ -261,7 +258,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         this.level.removeChangeLevelListener(this);
         this.level.removeEndGameListener(this);
         this.level.removeStepListener(this);
-        this.level.getBodies().forEach((k,v) -> v.destroy());
+        this.level.getBodies().forEach((k, v) -> v.destroy());
         this.level = level;
         this.level.addChangeLevelListener(this);
         this.level.addEndGameListener(this);
@@ -275,7 +272,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
     /**
      * finalizes the player object, and initializes a new one
-     * 
+     *
      * @param level the level that the game is changing to
      */
     private void initializePlayer(Level level) {
@@ -294,7 +291,7 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
     /**
      * when a level is changed, this is called as it will finalize the old view
-     *  then make a new one
+     * then make a new one
      */
     private void initializeView() {
         view.removeMouseListener(mh);
@@ -308,11 +305,11 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
         kh.setPlayer(player);
         frame.requestFocus();
     }
-    
+
     /**
-     * set the background of the game to the background of the current level.
-     * If the background image does not exist, the background will be set to 
-     * a cyan fill 
+     * set the background of the game to the background of the current level. If
+     * the background image does not exist, the background will be set to a cyan
+     * fill
      */
     private void initializeBackground() {
         layeredPane.remove(background);
@@ -333,51 +330,51 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
     /**
      * set the current level to a certain number
-     * 
+     *
      * @param levelNumber the integer representation of the level to be set
      */
     public void setLevel(LevelNumber levelNumber) {
         this.levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode());
         changeLevel();
     }
-    
+
     /**
-     * 
+     *
      */
     public void incrementLevel() {
         highScore.completedLevel();
         int levelCount = LevelNumber.lookup.size();
-        if (levelNumber.getCode()< levelCount){
-            levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode()+1);
-            changeLevel();            
+        if (levelNumber.getCode() < levelCount) {
+            levelNumber = LevelNumber.getLevelNumber(levelNumber.getCode() + 1);
+            changeLevel();
         } else {
             gameComplete();
         }
     }
-    
+
     /**
      * shows the high scores to the player at the end of the game
      */
-    private void gameComplete(){
+    private void gameComplete() {
         level.stop();
         JPanel scorePanel = new JPanel();
         layeredPane.add(scorePanel);
-        scorePanel.setBounds(0,0,resolutionX,resolutionY);
-        highScore.finish(scorePanel);        
-    }   
-    
+        scorePanel.setBounds(0, 0, resolutionX, resolutionY);
+        highScore.finish(scorePanel);
+    }
+
     /**
      * gets high score object
-     * 
+     *
      * @return the highScore object for the current game session
      */
-    public HighScore getHighScore(){
+    public HighScore getHighScore() {
         return highScore;
     }
 
     /**
      * gets the level that is being run
-     * 
+     *
      * @return the level that is being run
      */
     public Level getLevel() {
@@ -386,16 +383,16 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
     /**
      * assign a new view object to view
-     * 
+     *
      * @param view the view object to be assigned
      */
     public void setView(UserView view) {
         this.view = view;
     }
 
-    /** 
+    /**
      * returns the view object that is being used
-     * 
+     *
      * @return the view object that is being used
      */
     public UserView getView() {
@@ -404,16 +401,17 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
     /**
      * gets the player that is being used in the current level
-     * 
+     *
      * @return a player object that has been instanced for the current level
      */
     public Player getPlayer() {
         return player;
     }
-    
+
     /**
-     * gets the keyboard handler object that is being assigned to the game window
-     * 
+     * gets the keyboard handler object that is being assigned to the game
+     * window
+     *
      * @return a keyboard handler object
      */
     public KeyboardHandler getKeyboardHandler() {
@@ -422,17 +420,17 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
 
     /**
      * gets the layered pane that is associated with the current game window
-     * 
-     * @return a JLayeredPane object 
+     *
+     * @return a JLayeredPane object
      */
     public JLayeredPane getLayeredPane() {
         return layeredPane;
     }
 
     /**
-     * when a change level event is sent, this will be called, and will
-     * change the current level to the next one
-     * 
+     * when a change level event is sent, this will be called, and will change
+     * the current level to the next one
+     *
      * @param e a change level event
      */
     @Override
@@ -441,8 +439,8 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     }
 
     /**
-     * occurs before a simulation event occurs 
-     * 
+     * occurs before a simulation event occurs
+     *
      * @param e a step event
      */
     @Override
@@ -452,12 +450,12 @@ public final class Levels implements ChangeLevelListener, StepListener, EndGameL
     }
 
     /**
-     * occurs after a simulation event occurs.
-     * This will choose when to centre the view on the player, and check if 
-     * the player is out of bounds thus killing the player.
-     * In addition, the JLayeredPane is revalidated and redrawn
-     * 
-     * @param e a step event 
+     * occurs after a simulation event occurs. This will choose when to centre
+     * the view on the player, and check if the player is out of bounds thus
+     * killing the player. In addition, the JLayeredPane is revalidated and
+     * redrawn
+     *
+     * @param e a step event
      */
     @Override
     public void postStep(StepEvent e) {

@@ -1,8 +1,3 @@
-/*
- * the level object is a subtype of world, and stores a collection of bodies
- * within the level.  The class can also be used to alter the physical properties 
- * of the bodies
- */
 package semester2java.Levels;
 
 import city.cs.engine.Body;
@@ -24,6 +19,9 @@ import semester2java.Levels.Event.EndGameEvent;
 import semester2java.Levels.Event.EndGameListener;
 
 /**
+ * the level object is a subtype of world, and stores a collection of bodies
+ * within the level. The class can also be used to alter the physical properties
+ * of the bodies
  *
  * @author Christopher
  */
@@ -320,7 +318,7 @@ public abstract class Level extends World {
 
     /**
      * add a new end game listener object to the list of listeners
-     * 
+     *
      * @param listener a new end game listener object
      */
     public synchronized void addEndGameListener(EndGameListener listener) {
@@ -329,7 +327,7 @@ public abstract class Level extends World {
 
     /**
      * remove an end game listener object from the list of listeners
-     * 
+     *
      * @param listener an existing end game listener object
      */
     public synchronized void removeEndGameListener(EndGameListener listener) {

@@ -35,8 +35,8 @@ public class Worm extends Walker implements CollisionListener {
     //health upon being shot.
     private double threshold;
     private double dropHealthChance;
-    private static final BodyImage wormImage = new BodyImage("data/worm.png", 2.5f);
-    private static final BodyImage heartImage = new BodyImage("data/appleImageFull.png", 2);
+    private static final BodyImage WORM_IMAGE = new BodyImage("data/worm.png", 2.5f);
+    private static final BodyImage HEART_IMAGE = new BodyImage("data/appleImageFull.png", 2);
 
     public Worm(World world) {
         super(world);
@@ -55,7 +55,7 @@ public class Worm extends Walker implements CollisionListener {
         shapes.add(new PolygonShape(1.109f, -1.003f, 0.697f, -0.684f, 0.691f, -0.134f, 0.903f, -0.003f, 1.109f, -0.147f, 1.241f, -0.516f));
         shapes.add(new PolygonShape(-0.097f, 0.772f, -0.034f, 0.403f, -0.216f, 0.184f, -0.734f, 0.072f, -1.122f, 0.309f, -1.191f, 0.609f, -0.966f, 0.891f, -0.397f, 0.953f));
         shapes.forEach(s -> new SolidFixture(this, s).setFriction(1));
-        addImage(wormImage);
+        addImage(WORM_IMAGE);
         this.setName("standardEnemy");
         this.setPosition(new Vec2(0, 0));
         this.setAngle(-(float) Math.PI / 5);
@@ -81,7 +81,7 @@ public class Worm extends Walker implements CollisionListener {
             Body heart = new DynamicBody(world);
             SolidFixture heartFixture = new SolidFixture(heart, heartShape);
             heart.setName("1health");
-            heart.addImage(heartImage);
+            heart.addImage(HEART_IMAGE);
             heart.setPosition(this.getPosition());
             this.destroy();
         } else {
