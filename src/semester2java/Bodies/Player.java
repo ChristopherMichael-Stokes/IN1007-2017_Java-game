@@ -539,7 +539,7 @@ public class Player extends Walker implements CollisionListener {
         } else if (mouseLocation.x > playerLocation.x) {
             theta = pi - theta;
         }
-
+        
         Projectile tempProjectile = new Projectile(getWorld(), PROJECTILE, force.mul(getShotSpeed() / magnitude), bulletStart, pi / 2 - theta);
         tempProjectile.setName("playerProjectile");
         tempProjectile.addImage(PROJECTILE_IMAGE);

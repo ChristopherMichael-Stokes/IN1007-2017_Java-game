@@ -48,7 +48,7 @@ public class Semester2Java extends SimulationSettings implements Runnable {
     /**
      * the window that the game will be displayed on
      */
-    private final JFrame frame;
+    private JFrame frame;
     /**
      * the resolution of the game window
      */
@@ -93,6 +93,19 @@ public class Semester2Java extends SimulationSettings implements Runnable {
         return frame;
     }
     
+    public void setFrame(JFrame frame){
+        this.frame = frame;
+        this.frame.setSize(resolutionX,resolutionY);
+        this.frame.setFocusable(true);
+        // quit the application when the game window is closed
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame.setLocationByPlatform(true);
+        this.frame.setAutoRequestFocus(true);
+        // don't let the game window be resized
+        this.frame.setResizable(false);
+        
+    }
+    
     /**
      * when this is called, the frame will be setup, and all the parts of the 
      * gui will be added to the frame.
@@ -132,7 +145,7 @@ public class Semester2Java extends SimulationSettings implements Runnable {
         // make the window visible
         frame.setVisible(true);
     }
-
+        
     /**
      * creates a new game object, and runs the game.
      * 
@@ -146,7 +159,9 @@ public class Semester2Java extends SimulationSettings implements Runnable {
         Thread t1 = new Thread(game);
         
         PreGame pg = new PreGame(game.getFrame(),horizontal,vertical);
-                
+        Thread t2 = new Thread(pg);
+        t2.start();
+        t2.join();
         t1.start();
         
         //System.out.println(game.getFpsAverageCount());

@@ -206,9 +206,12 @@ public class HighScore {
         
         tableDisplay.setPreferredSize(size);
 
-        System.out.println("width: " + tableDisplay.getPreferredSize().width + " height: " + tableDisplay.getPreferredSize().height);
+//        System.out.println("width: " + tableDisplay.getPreferredSize().width + " height: " + tableDisplay.getPreferredSize().height);
 
         JOptionPane.showInternalMessageDialog(panel, tableDisplay, "HighScores", JOptionPane.YES_NO_OPTION);
+        
+        
+        
     }
 
     /**
