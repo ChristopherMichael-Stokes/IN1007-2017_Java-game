@@ -113,6 +113,8 @@ public class Player extends Walker implements CollisionListener {
     private static final Shape PROJECTILE
             = new PolygonShape(-0.059f, 0.659f, 0.114f, 0.281f, 0.207f, -0.405f, 0.053f, -0.64f, -0.368f, -0.64f, -0.535f, -0.386f, -0.362f, 0.281f, -0.189f, 0.652f);
 
+    private final JLabel fullHeart,halfHeart,emptyHeart;
+    private final JLabel[] drawHearts,heartTypes;
     /**
      * this will initialize the player to have three hearts, and initialize all
      * the panels
@@ -145,6 +147,13 @@ public class Player extends Walker implements CollisionListener {
         healthPanel.setLayout(new BoxLayout(healthPanel, BoxLayout.LINE_AXIS));
         healthPanel.setBackground(new Color(0, 0, 0, 0));
         projectiles = new ArrayList<>();
+        
+        fullHeart = new JLabel(FH);
+        halfHeart = new JLabel(HH);
+        emptyHeart = new JLabel(EH);
+
+        heartTypes = new JLabel[]{emptyHeart, halfHeart, fullHeart};
+        drawHearts = new JLabel[this.getHearts()];
     }
 
     /**
@@ -322,12 +331,7 @@ public class Player extends Walker implements CollisionListener {
      */
     public void drawPlayerHealth() {
         healthPanel.removeAll();
-        JLabel fullHeart = new JLabel(FH);
-        JLabel halfHeart = new JLabel(HH);
-        JLabel emptyHeart = new JLabel(EH);
-
-        JLabel[] heartTypes = new JLabel[]{emptyHeart, halfHeart, fullHeart};
-        JLabel[] drawHearts = new JLabel[this.getHearts()];
+        
         for (int i = 0; i < this.getHearts(); i++) {
             //place the correct label at each position of the array
             drawHearts[(this.getHearts() - 1) - i]
