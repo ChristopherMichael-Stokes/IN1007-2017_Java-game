@@ -34,7 +34,7 @@ import semester2java.Bodies.Player;
 import semester2java.Levels.Levels;
 
 /**
- *
+ * used to handle the players key inputs
  * @author chris
  */
 public class KeyboardHandler implements KeyListener, ActionListener {
@@ -44,7 +44,7 @@ public class KeyboardHandler implements KeyListener, ActionListener {
     private int key;
     private final LayoutManager layout;
     private final GridBagConstraints gBC;
-    private JLabel confirmationLbl, pauseText;
+    private JLabel pauseText;
     private final JPanel pauseBackground;
     private JButton rebindKey, play, level1, level2, level3, level4;
     private World world;
@@ -55,6 +55,13 @@ public class KeyboardHandler implements KeyListener, ActionListener {
     private boolean rebindingKey;
     private Map<String, JFormattedTextField> textFields;
 
+    /**
+     * sets the key binds for the game, and builds the pause background
+     * @param world the current world that is being used
+     * @param player the current player object
+     * @param layeredPane the JLayeredPane that handles all other panels
+     * @param levels the levels object that handles levels
+     */
     public KeyboardHandler(World world, Player player, JLayeredPane layeredPane, Levels levels) {
         this.world = world;
         this.player = player;
@@ -102,6 +109,11 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         this.world = world;
     }
 
+    /**
+     * this method handles what happens when the player clicks on the rebind 
+     * key button.  The player is sent to a screen that will show them all
+     * current key binds and will have the option to rebind any key.
+     */
     private void rebindKey() {
         rebindingKey = true;
         layeredPane.moveToBack(pauseBackground);
@@ -188,12 +200,16 @@ public class KeyboardHandler implements KeyListener, ActionListener {
             gBC.fill = GridBagConstraints.VERTICAL;
             pauseBackground.add(textField, gBC);
             i++;
-        }
+        }        
+        layeredPane.moveToFront(pauseBackground);
         pauseBackground.revalidate();
         pauseBackground.repaint();
-        layeredPane.moveToFront(pauseBackground);
     }
 
+    /**
+     * this will add all the buttons and the listeners to the menu that shows up 
+     * when the user presses the pause button.
+     */
     private void buildPauseBackground() {
         pauseBackground.removeAll();
         pauseBackground.setOpaque(true);
@@ -242,6 +258,8 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         level4 = new JButton("LEVEL 4");
         level4.addActionListener(this);
         pauseBackground.add(level4, gBC);
+        pauseBackground.revalidate();
+        pauseBackground.repaint();
 
     }
 
