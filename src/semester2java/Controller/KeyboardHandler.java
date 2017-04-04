@@ -13,8 +13,11 @@ import java.awt.GridBagLayout;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Timer;
@@ -24,6 +27,7 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import org.jbox2d.common.Vec2;
 import semester2java.Bodies.Player;
@@ -55,7 +59,7 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         this.world = world;
         this.player = player;
         this.layeredPane = layeredPane;
-        KeyboardHandler.levels=levels;
+        KeyboardHandler.levels = levels;
         keyBinds = new TreeMap<>();
 
         //default key bindings
@@ -125,8 +129,62 @@ public class KeyboardHandler implements KeyListener, ActionListener {
             } else {
                 keyValue = Character.getName(entry.getValue());
             }
+
             textField.setValue(keyValue);
             textField.setColumns(5);
+            textField.setEditable(false);
+
+            textField.addMouseListener(new MouseListener() {
+                private final String key = entry.getKey();
+                private final JFormattedTextField tempTextField = textField;
+
+                @Override
+                public void mouseClicked(MouseEvent me) {
+                    JOptionPane.showInternalMessageDialog(pauseBackground, "Press ok then type any key");
+                    pauseBackground.requestFocus();
+                    pauseBackground.addKeyListener(new KeyAdapter() {
+                        @Override
+                        public void keyPressed(KeyEvent e) {
+                            System.out.println("bleh");
+                            setKeyBind(key, e.getKeyCode());
+
+                            int tempValue = keyBinds.get(key);
+                            String newValue;
+                            if (Character.isAlphabetic((char)tempValue)){
+                                newValue = Character.toString((char)tempValue);
+                            } else {
+                                newValue = Character.getName((char)tempValue);
+                            }
+                            tempTextField.setValue(newValue);
+                            for (KeyListener k : pauseBackground.getKeyListeners()) {
+                                pauseBackground.removeKeyListener(k);
+                            }
+                            pauseBackground.revalidate();
+                            pauseBackground.repaint();
+                        }
+                    });
+                    pauseBackground.revalidate();
+                    pauseBackground.repaint();
+
+                }
+
+                @Override
+                public void mousePressed(MouseEvent me) {
+                }
+
+                @Override
+                public void mouseReleased(MouseEvent me) {
+                }
+
+                @Override
+                public void mouseEntered(MouseEvent me) {
+                }
+
+                @Override
+                public void mouseExited(MouseEvent me) {
+                }
+            });
+
             gBC.fill = GridBagConstraints.VERTICAL;
             pauseBackground.add(textField, gBC);
             i++;
@@ -203,7 +261,7 @@ public class KeyboardHandler implements KeyListener, ActionListener {
     public void keyPressed(KeyEvent e) {
 
         key = e.getKeyCode();
-        if (key == KeyEvent.VK_Q){
+        if (key == KeyEvent.VK_Q) {
             System.out.println("q");
         }
         //global code to change pause state
@@ -249,7 +307,7 @@ public class KeyboardHandler implements KeyListener, ActionListener {
     }
 
     /**
-     * 
+     *
      * @param e an event generated when the users releases a key
      */
     @Override
@@ -279,7 +337,7 @@ public class KeyboardHandler implements KeyListener, ActionListener {
 
     /**
      * allow player to be able to bind keys
-     * 
+     *
      * @param action the action to set a bind to
      * @param keyNumber the key to associate with an action
      */
@@ -296,12 +354,13 @@ public class KeyboardHandler implements KeyListener, ActionListener {
                 //put code here to ask player if they are sure they want
                 //to unbind the action bound to key
                 String keyName = Character.getName(keyNumber);
-                confirmationLbl = new JLabel(keyName
-                        + " is already bound to " + oldBinding
-                        + ", are you sure you would like to unbind " + keyName);
-//                confirmationLbl
-                pauseBackground.add(confirmationLbl);
+                String confirmation = keyName + " is already bound to "
+                        + oldBinding + ", please choose a new binding for "
+                        + action;
+
+                JOptionPane.showInternalMessageDialog(pauseBackground, confirmation);
             }
+            keyBinds.put(action, keyNumber);
 
         } else {
             System.out.println("action not present");
@@ -310,24 +369,25 @@ public class KeyboardHandler implements KeyListener, ActionListener {
 
     /**
      * handles what to do when the user clicks on a button.
+     *
      * @param e an event generated when the user clicks a button
      */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(play)) {
-            if (rebindingKey){
+            if (rebindingKey) {
                 rebindingKey = false;
             }
             unPause();
         } else if (e.getSource().equals(rebindKey)) {
             rebindKey();
-        } else if (e.getSource().equals(level1)){
+        } else if (e.getSource().equals(level1)) {
             levels.setLevel(Levels.LevelNumber.LEVEL1);
-        } else if (e.getSource().equals(level2)){
+        } else if (e.getSource().equals(level2)) {
             levels.setLevel(Levels.LevelNumber.LEVEL2);
-        } else if (e.getSource().equals(level3)){
+        } else if (e.getSource().equals(level3)) {
             levels.setLevel(Levels.LevelNumber.LEVEL3);
-        } else if (e.getSource().equals(level4)){
+        } else if (e.getSource().equals(level4)) {
             levels.setLevel(Levels.LevelNumber.LEVEL4);
         }
 
