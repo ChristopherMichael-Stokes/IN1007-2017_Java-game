@@ -36,18 +36,18 @@ import semester2java.Levels.Levels;
 public class KeyboardHandler implements KeyListener, ActionListener {
 
     private static Levels levels;
-    private Runnable r1;
+    private final Runnable r1;
     private int key;
-    private LayoutManager layout;
-    private GridBagConstraints gBC;
+    private final LayoutManager layout;
+    private final GridBagConstraints gBC;
     private JLabel confirmationLbl, pauseText;
-    private JPanel pauseBackground, confirmation;
+    private final JPanel pauseBackground;
     private JButton rebindKey, play, level1, level2, level3, level4;
     private World world;
     private Player player;
     private final JLayeredPane layeredPane;
     //player bound keys
-    private Map<String, Integer> keyBinds;
+    private final Map<String, Integer> keyBinds;
     private boolean rebindingKey;
     private Map<String, JFormattedTextField> textFields;
 

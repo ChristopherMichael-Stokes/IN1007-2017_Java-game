@@ -52,7 +52,7 @@ public class Semester2Java extends SimulationSettings implements Runnable {
     /**
      * the resolution of the game window
      */
-    private final int resolutionX, resolutionY;
+    private int resolutionX, resolutionY;
 
     /**
      * initializes the game, the gui and constructs the levels object.
@@ -102,9 +102,9 @@ public class Semester2Java extends SimulationSettings implements Runnable {
         this.frame.setLocationByPlatform(true);
         this.frame.setAutoRequestFocus(true);
         // don't let the game window be resized
-        this.frame.setResizable(false);
-        
+        this.frame.setResizable(false);        
     }
+    
     
     /**
      * when this is called, the frame will be setup, and all the parts of the 
@@ -113,7 +113,8 @@ public class Semester2Java extends SimulationSettings implements Runnable {
      */
     @Override
     public void run() {
-        
+        resolutionX = frame.getWidth();
+        resolutionY = frame.getHeight();
 
         layeredPane.setOpaque(false);
         layeredPane.setPreferredSize(new Dimension(resolutionX, resolutionY));
@@ -150,7 +151,7 @@ public class Semester2Java extends SimulationSettings implements Runnable {
      * creates a new game object, and runs the game.
      * 
      * @param args command line arguments
-     * @throws InterruptedException 
+     * @throws InterruptedException if a thread is interrupted
      */
     public static void main(String[] args) throws InterruptedException {
         int horizontal = 1024, vertical = 768;

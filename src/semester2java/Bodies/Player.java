@@ -153,7 +153,7 @@ public class Player extends Walker implements CollisionListener {
         emptyHeart = new JLabel(EH);
 
         heartTypes = new JLabel[]{emptyHeart, halfHeart, fullHeart};
-        drawHearts = new JLabel[this.getHearts()];
+        drawHearts = new JLabel[hearts];
     }
 
     /**
