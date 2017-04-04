@@ -182,7 +182,7 @@ public class PreGame implements Runnable {
                                 Image.SCALE_DEFAULT)));
 
                 JLabel hint1 = new JLabel("The objective of the game is to get"
-                        + "to the end as quick as possible, while trying not"
+                        + " to the end as quick as possible, while trying not"
                         + " to die.");
 
                 JTextArea hint2 = new JTextArea("You can move the player with WASD.\n\n"
