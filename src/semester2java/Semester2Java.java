@@ -147,12 +147,7 @@ public class Semester2Java extends SimulationSettings implements Runnable {
         frame.setVisible(true);
     }
         
-    /**
-     * creates a new game object, and runs the game.
-     * 
-     * @param args command line arguments
-     * @throws InterruptedException if a thread is interrupted
-     */
+    
     public static void main(String[] args) throws InterruptedException {
         int horizontal = 1024, vertical = 768;
         

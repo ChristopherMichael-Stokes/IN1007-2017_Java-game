@@ -248,6 +248,10 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         return pauseBackground;
     }
 
+    /**
+     * 
+     * @param e an event generated when the users releases a key
+     */
     @Override
     public void keyReleased(KeyEvent e) {
         key = e.getKeyCode();
@@ -273,7 +277,12 @@ public class KeyboardHandler implements KeyListener, ActionListener {
         return key;
     }
 
-    //allow player to be able to bind keys
+    /**
+     * allow player to be able to bind keys
+     * 
+     * @param action the action to set a bind to
+     * @param keyNumber the key to associate with an action
+     */
     public void setKeyBind(String action, int keyNumber) {
 
         if (keyBinds.containsKey(action)) {
@@ -294,20 +303,17 @@ public class KeyboardHandler implements KeyListener, ActionListener {
                 pauseBackground.add(confirmationLbl);
             }
 
-//                String oldBinding = keyBinds.entrySet()
-//                                            .stream()
-//                                            .filter((Map.Entry<String, Integer> entry) -> {
-//                                                entry.getValue().equals(keyNumber);
-//                                                return entry.getKey();
-//                                            });
         } else {
             System.out.println("action not present");
         }
     }
 
+    /**
+     * handles what to do when the user clicks on a button.
+     * @param e an event generated when the user clicks a button
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
-
         if (e.getSource().equals(play)) {
             if (rebindingKey){
                 rebindingKey = false;
